@@ -1,0 +1,22 @@
+{
+  "name": "webp2_parkinglot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "types": "modules",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andre111991/Webp2_parkingLot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/andre111991/Webp2_parkingLot/issues"
+  },
+  "homepage": "https://github.com/andre111991/Webp2_parkingLot#readme"
+}
