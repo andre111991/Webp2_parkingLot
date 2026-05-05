@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartVaga - Vagas</title>
+    <!-- Fontes -->
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- CSS: O style.css mantém a consistência da barra e o vagas.css trata do conteúdo -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="vagas.css">
+</head>
+<body>
+
+    <!-- Barra de Navegação (Igual ao Index) -->
+    <nav>
+        <div class="logo">SmartVaga</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="vagas.html" class="active">Vagas</a></li>
+            <li><a href="carregamentos.html">Carregamentos</a></li>
+            <li><a href="reservas.html">Reservas</a></li>
+            <li><a href="contactos.html">Contactos</a></li>
+        </ul>
+        <button class="btn-reserva">Reservar Agora <span>➔</span></button>
+    </nav>
+
+    <main class="vagas-main">
+        <!-- Seleção de Piso e Filtros -->
+        <div class="vagas-filters">
+            <div class="piso-selector-container">
+                <button class="piso-btn">Piso 0</button>
+                <button class="piso-btn active">Piso -1</button>
+                <button class="piso-btn">Piso -2</button>
+            </div>
+            
+            <div class="checkbox-group-horizontal">
+                <label class="custom-check">
+                    <input type="checkbox"> Normal
+                </label>
+                <label class="custom-check">
+                    <input type="checkbox"> Elétrico
+                </label>
+                <label class="custom-check">
+                    <input type="checkbox"> Mostrar apenas vagas livres
+                </label>
+            </div>
+        </div>
+
+        <!-- Grid de Cards Estáticos (Conforme o Figma) -->
+        <div class="cards-grid">
+            <div class="stat-card">
+                <div class="number">0</div>
+                <p>Vagas livres</p>
+            </div>
+            <div class="stat-card">
+                <div class="number">0</div>
+                <p>Vagas de carregamento livres</p>
+            </div>
+            <div class="stat-card">
+                <div class="number">0</div>
+                <p>Vagas reservadas</p>
+            </div>
+        </div>
+
+        <!-- Botão de Ação Inferior -->
+        <div class="reserva-footer">
+            <button class="btn-reserva-vagas">Pretende reservar?</button>
+        </div>
+    </main>
+
+</body>
+</html>

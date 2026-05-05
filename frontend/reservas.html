@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartVaga - Reservas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="reservas.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">SmartVaga</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="vagas.html">Vagas</a></li>
+            <li><a href="carregamentos.html">Carregamentos</a></li>
+            <li><a href="reservas.html" class="active">Reservas</a></li>
+            <li><a href="contactos.html">Contactos</a></li>
+        </ul>
+        <button class="btn-reserva">Reservar Agora <span>➔</span></button>
+    </nav>
+
+    <main class="reservas-container">
+        <header class="reservas-header">
+            <h1>Reservas de vagas</h1>
+            <button class="btn-pill-small">Reservar Agora</button>
+        </header>
+
+        <section class="stepper-grid">
+            <!-- Passo 01 -->
+            <div class="step-item">
+                <span class="step-number">01</span>
+                <label>Selecionar veículo</label>
+                <div class="step-input-box"></div>
+            </div>
+
+            <!-- Passo 02 -->
+            <div class="step-item">
+                <span class="step-number">02</span>
+                <label>Data & hora de inicio</label>
+                <div class="step-input-box"></div>
+            </div>
+
+            <!-- Passo 03 -->
+            <div class="step-item">
+                <span class="step-number">03</span>
+                <label>Data & hora de fim</label>
+                <div class="step-input-box"></div>
+            </div>
+
+            <!-- Passo 04 -->
+            <div class="step-item">
+                <span class="step-number">04</span>
+                <label>Tipo de vaga</label>
+                <div class="step-input-box"></div>
+            </div>
+        </section>
+
+        <footer class="reservas-footer">
+            <button class="btn-efetuar-reserva">Efetuar reserva</button>
+        </footer>
+    </main>
+
+</body>
+</html>
