@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { Sequelize, DataTypes } from "sequelize";
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,
@@ -18,10 +18,15 @@ try {
     process.exit(1);
 }
 
-import defineUser  from "./user.model.js";
+import DefineUser  from "./user.model.js";
+const User = DefineUser(sequelize, DataTypes);
 
-const User = defineUser(sequelize, Sequelize.DataTypes);
-
-//await sequelize.sync({ alter: true });
+try {
+    await sequelize.sync({ alter: true }); // use { force: true } to drop and recreate tables on every sync (use with caution in production)
+    console.log("All models were synchronized successfully.");
+} catch (error) {
+    console.error("Error synchronizing models:", error);
+    process.exit(1);
+}
 
 export { sequelize, User };
