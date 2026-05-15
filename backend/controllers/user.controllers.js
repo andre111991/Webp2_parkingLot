@@ -1,26 +1,25 @@
 import { User } from '../models/db.config.js';
 import bcrypt from "bcrypt"; // para encriptar a password
-import { validationError, genericError, conflictError } from '../utils/error.utils.js';
+import {genericError, conflictError } from '../utils/error.utils.js';
 
 
 export const RegisterUser = async (req, res, next) => {
     try {
-
+        // 1. Extração dos dados (já validados pelo middleware no passo anterior)
         const { nome, email, password, tipo_utilizador } = req.body;
 
-        if (!nome || !email || !password) {
-            const error = validationError("Name, email and password are required.");
-            return next(error);
-        }
-
+        // 2. Lógica de Negócio: Verificar se o email já está em uso
+        // Como o email é 'unique' na DB, esta verificação evita erros de sistema e dá uma resposta clara
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
-            const error = conflictError("A user with this email already exists.");
+            const error = conflictError("Este email já se encontra registado.");
             return next(error);
         }
 
+        // 3. Encriptação da Password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // 4. Criação do Utilizador no Sequelize
         const newUser = await User.create({
             nome,
             email,
@@ -28,21 +27,22 @@ export const RegisterUser = async (req, res, next) => {
             tipo_utilizador: tipo_utilizador || 'cliente'
         });
 
-        res.status(201).json({ // falta por a lista de mais opçoes 
+        // 5. Resposta de Sucesso
+        res.status(201).json({
             message: "Utilizador criado com sucesso!",
-            id: newUser.id_utilizador
+            id: newUser.id_utilizador // Confirmamos que o campo no modelo é id_utilizador
         });
 
     } catch (error) {
-
-        if(!error.status) {
-            next(genericError());
+        // Se o erro vier das validações do MODELO (ex: password fraca)
+        // passamos a mensagem específica do Sequelize para o nosso genericError
+        if (!error.status) {
+            next(genericError(error.message));
         } else {    
             next(error);
         }
-
     }
-}
+};
 
 export const GetUsers = async (req, res, next) => {
     try {

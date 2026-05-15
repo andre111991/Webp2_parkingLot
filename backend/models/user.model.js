@@ -1,4 +1,4 @@
-export default (sequelize, DataTypes) => sequelize.define("Utilizador", {
+export default (sequelize, DataTypes) => sequelize.define("User", {
 
     nome: {
         type: DataTypes.STRING,
@@ -25,14 +25,6 @@ export default (sequelize, DataTypes) => sequelize.define("Utilizador", {
         validate: {
             notEmpty: true,
             len: [8, 255],
-            isStrongPassword(value) {
-                const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-                if (!regex.test(value)) {
-                    throw new Error(
-                        'A password deve ter pelo menos 8 caracteres, uma maiúscula, uma minúscula e um número.'
-                    );
-                }
-            }
         }
     },
 
