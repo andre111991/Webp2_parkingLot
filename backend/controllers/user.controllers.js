@@ -1,25 +1,27 @@
 import { User } from '../models/db.config.js';
 import bcrypt from "bcrypt"; // para encriptar a password
-import {genericError, conflictError } from '../utils/error.utils.js';
+import jwt from 'jsonwebtoken'; // para gerar o token JWT
+import { validationError, genericError, conflictError } from '../utils/error.utils.js';
 
 
 export const RegisterUser = async (req, res, next) => {
     try {
-        // 1. Extração dos dados (já validados pelo middleware no passo anterior)
+
         const { nome, email, password, tipo_utilizador } = req.body;
 
-        // 2. Lógica de Negócio: Verificar se o email já está em uso
-        // Como o email é 'unique' na DB, esta verificação evita erros de sistema e dá uma resposta clara
-        const existingUser = await User.findOne({ where: { email } });
-        if (existingUser) {
-            const error = conflictError("Este email já se encontra registado.");
+        if (!nome || !email || !password) {
+            const error = validationError("Name, email and password are required.");
             return next(error);
         }
 
-        // 3. Encriptação da Password
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            const error = conflictError("A user with this email already exists.");
+            return next(error);
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // 4. Criação do Utilizador no Sequelize
         const newUser = await User.create({
             nome,
             email,
@@ -27,22 +29,21 @@ export const RegisterUser = async (req, res, next) => {
             tipo_utilizador: tipo_utilizador || 'cliente'
         });
 
-        // 5. Resposta de Sucesso
-        res.status(201).json({
+        res.status(201).json({ // falta por a lista de mais opçoes 
             message: "Utilizador criado com sucesso!",
-            id: newUser.id_utilizador // Confirmamos que o campo no modelo é id_utilizador
+            id: newUser.id_utilizador
         });
 
     } catch (error) {
-        // Se o erro vier das validações do MODELO (ex: password fraca)
-        // passamos a mensagem específica do Sequelize para o nosso genericError
-        if (!error.status) {
-            next(genericError(error.message));
+
+        if(!error.status) {
+            next(genericError());
         } else {    
             next(error);
         }
+
     }
-};
+}
 
 export const GetUsers = async (req, res, next) => {
     try {
@@ -65,6 +66,44 @@ export const GetUsers = async (req, res, next) => {
 
     } catch (error) {
         // Usamos o teu genericError para falhas na base de dados
+        next(genericError(error.message));
+    }
+};
+
+export const LoginUser = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return next(validationError("Credenciais inválidas.")); 
+        }
+
+        // 2. Verificar a password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return next(validationError("Credenciais inválidas."));
+        }
+
+        // 3. Gerar o Token JWT
+        const token = jwt.sign(
+            { id: user.id_utilizador, tipo: user.tipo_utilizador },
+            process.env.JWT_SECRET,
+            { expiresIn: '1d' } // O token expira em 1 dia
+        );
+
+        // 4. Enviar resposta
+        res.status(200).json({
+            message: "Login efetuado com sucesso!",
+            token: token,
+            user: {
+                id: user.id_utilizador,
+                nome: user.nome,
+                tipo: user.tipo_utilizador
+            }
+        });
+
+    } catch (error) {
         next(genericError(error.message));
     }
 };
