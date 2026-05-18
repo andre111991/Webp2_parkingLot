@@ -1,0 +1,108 @@
+/* registar.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-header {
+    padding: 30px 40px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.auth-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-top: -40px;
+}
+
+.auth-card {
+    background-color: #d7dbcf; /* Verde-cinza do Figma */
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 35px;
+    border-radius: 24px;
+    text-align: center;
+}
+
+.auth-title {
+    font-size: 36px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 35px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 6px;
+}
+
+.input-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c2c2c;
+    padding-left: 2px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #333333;
+    outline: none;
+}
+
+.input-group input::placeholder {
+    color: #b3b3b3;
+    font-style: italic;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.btn-registar {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: #4a5d1b; /* Verde oliva escuro do botão único */
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-registar:hover {
+    opacity: 0.9;
+}

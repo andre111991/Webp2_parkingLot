@@ -12,7 +12,7 @@ body {
     color: #1a1a1a;
 }
 
-/* Navegação */
+/* Navegação Atualizada e Centrada */
 nav {
     display: flex;
     justify-content: space-between;
@@ -20,18 +20,23 @@ nav {
     padding: 25px 80px;
     max-width: 1440px;
     margin: 0 auto;
+    position: relative; /* Base essencial para poder centrar de forma absoluta a lista */
 }
 
 .logo {
     font-size: 24px;
     font-weight: 600;
     letter-spacing: -0.5px;
+    z-index: 2; /* Garante que fica acima de qualquer sobreposição */
 }
 
 .nav-links {
     display: flex;
     gap: 35px;
     list-style: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* Força a barra de navegação a ficar rigorosamente ao centro do ecrã */
 }
 
 .nav-links a {
@@ -41,23 +46,25 @@ nav {
     font-weight: 500;
 }
 
-.btn-reserva {
-    background-color: #435222;
-    color: white;
-    padding: 12px 28px;
-    border-radius: 50px;
-    border: none;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
+/* Novo estilo para o Perfil no Canto Direito */
+.user-profile {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    z-index: 2;
+    cursor: pointer;
 }
 
-.btn-reserva span {
-    font-size: 12px;
-    transform: rotate(-45deg);
+.profile-icon {
+    width: 32px;
+    height: 32px;
+    color: #000000;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
 }
 
 /* Hero Section */
@@ -70,7 +77,7 @@ nav {
 .hero h1 {
     font-family: 'Instrument Serif', serif;
     font-size: 85px;
-    line-height: 2.0;
+    line-height: 1.2; /* Corrigido de 2.0 para evitar grandes espaços verticais indesejados */
     max-width: 900px;
     margin: 0 auto;
     font-weight: 400;

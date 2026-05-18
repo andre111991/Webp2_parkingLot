@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartVaga - Esquecer Password</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="esquecer-password.css">
+</head>
+<body>
+
+    <header class="auth-header">
+        <div class="logo">SmartVaga</div>
+    </header>
+
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1 class="auth-title">Esquecer password</h1>
+            
+            <form class="auth-form" action="login.html" method="POST">
+                <div class="input-group">
+                    <label for="reset-pass">Password nova</label>
+                    <input type="password" id="reset-pass" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="reset-confirm">Confirmação da Password nova</label>
+                    <input type="password" id="reset-confirm" required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="btn-confirmar">Confirmar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>
