@@ -8,10 +8,15 @@ const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "localhost";
 
 import UserRoutes from "./routes/utilizador.routes.js";
-import VeiculoRoutes from "./routes/veiculos.routes.js";
+// import VeiculoRoutes from "./routes/veiculos.routes.js";
+// import ReservasRoutes from "./routes/reservas.routes.js";
+// import VagasRoutes from "./routes/vagas.routes.js";
 
 app.use("/utilizadores", UserRoutes);
-app.use("/veiculos", VeiculoRoutes);
+// app.use("/veiculos", VeiculoRoutes);
+// app.use("/reservas", ReservasRoutes);
+// app.use("/vagas", VagasRoutes);
+
 
 app.use((req, res, next) => {
     const error = new Error(`Route ${req.method} ${req.originalUrl} not found`);

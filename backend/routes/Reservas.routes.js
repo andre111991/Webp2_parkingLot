@@ -1,6 +1,6 @@
 import express from "express";
 import { Reservar, VerReservas, CancelarReserva } from "../controllers/reserva.controllers.js";
-import { verificarToken } from "../middlewares/auth.middleware.js";
+import { verificarToken } from "../middlewares/user.middleware.js";
 
 const router = express.Router();
 

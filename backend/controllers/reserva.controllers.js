@@ -107,8 +107,8 @@ export const VerReservas = async (req, res, next) => {
                 { model: Vaga, attributes: ['andar', 'letra'] }
             ]
         });
-        //Success response
         
+        //Success response
         res.status(200).json({
             status: "sucesso",
             codigo: 200,
