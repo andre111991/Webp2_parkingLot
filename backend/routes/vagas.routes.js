@@ -1,9 +1,9 @@
 import express from "express";
-import { ListarVagas} from "../controllers/vaga.controllers.js";
+import { listarVagas} from "../controllers/vaga.controllers.js";
 
 const router = express.Router();
 
 // 1. Listar vagas
-router.get("/", ListarVagas); 
+router.get("/", listarVagas); 
 
 export default router;

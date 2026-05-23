@@ -3,7 +3,7 @@ import { Reserva, Vaga, Veiculo } from '../models/db.config.js';
 import { validationError, genericError } from '../utils/error.utils.js';
 
 //1. Criação da reserva
-export const Reservar = async (req, res, next) => {
+export const reservar = async (req, res, next) => {
     try {
         const id_utilizador = req.userId; // Vem do Token JWT
         const { id_veiculo, id_vaga, data_hora_inicio, data_hora_fim, valor } = req.body; //Add data_pagamento?
@@ -84,7 +84,7 @@ export const Reservar = async (req, res, next) => {
 };
 
 //2. Histórico do utilizador
-export const VerReservas = async (req, res, next) => {
+export const verReservas = async (req, res, next) => {
     try {
         const id_url = req.params.id; // O ID que vem na rota /:id
         const id_autenticado = req.userId; // O ID que vem do Token
@@ -121,7 +121,7 @@ export const VerReservas = async (req, res, next) => {
 };
 
 //3. Cancelar reserva
-export const CancelarReserva = async (req, res, next) => {
+export const cancelarReserva = async (req, res, next) => {
     try {
         const { id_reserva } = req.params;
         const id_autenticado = req.userId; // ID vindo do teu Token

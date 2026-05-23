@@ -2,7 +2,7 @@ import { Carregador } from '../models/db.config.js';
 import { validationError, genericError } from '../utils/error.utils.js';
 
 // 1. Iniciar Carregamento
-export const IniciarCarregamento = async (req, res, next) => {
+export const iniciarCarregamento = async (req, res, next) => {
     try {
         const { id_carregador, id_veiculo } = req.body;
         const id_utilizador = req.userId; // Verificar com o token
@@ -40,7 +40,7 @@ export const IniciarCarregamento = async (req, res, next) => {
 };
 
 // 2. Para o carregamento e faz o pagamento
-export const FinalizarCarregamento = async (req, res, next) => {
+export const finalizarCarregamento = async (req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -64,7 +64,7 @@ export const FinalizarCarregamento = async (req, res, next) => {
 };
 
 // 3. Utilizador vê carregamentos feitos anteriormente, mas apenas o dele!
-export const HistoricoCarregamentos = async (req, res, next) => {
+export const historicoCarregamentos = async (req, res, next) => {
     try {
         const { id } = req.params;
         //Error responses: 403 Forbidden

@@ -8,14 +8,16 @@ const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "localhost";
 
 import UserRoutes from "./routes/utilizador.routes.js";
-// import VeiculoRoutes from "./routes/veiculos.routes.js";
-// import ReservasRoutes from "./routes/reservas.routes.js";
-// import VagasRoutes from "./routes/vagas.routes.js";
+// import veiculoRoutes from "./routes/veiculos.routes.js";
+// import reservasRoutes from "./routes/reservas.routes.js";
+// import vagasRoutes from "./routes/vagas.routes.js";
+// import CarregadorRoutes from "./routes/carregamento.routes.js";
 
 app.use("/utilizadores", UserRoutes);
 // app.use("/veiculos", VeiculoRoutes);
 // app.use("/reservas", ReservasRoutes);
 // app.use("/vagas", VagasRoutes);
+app.use("/carregamentos", CarregadorRoutes);
 
 
 app.use((req, res, next) => {

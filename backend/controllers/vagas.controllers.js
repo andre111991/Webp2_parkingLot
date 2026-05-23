@@ -2,21 +2,9 @@ import { Vaga } from '../models/db.config.js';
 import { validationError, genericError } from '../utils/error.utils.js';
 
 // 1. Listar vagas
-export const ListarVagas = async (req, res, next) => {
+export const listarVagas = async (req, res, next) => {
     try {
-        const { estado } = req.query; 
-        let filtro = {};
-
-        if (estado === 'true') {
-            filtro = { where: { estado: 0 } }; // 0 = Livre
-        }
-
-        const vagas = await Vaga.findAll(filtro);
-
-        res.status(200).json({
-            status: "sucesso",
-            codigo: 200,
-        });
+        const { estado } = req.query;
 
         //Error responses: 503 Service Unavailable
         const sistemaDisponivel = true; // Alterar para false para testar o erro 503
@@ -47,6 +35,10 @@ export const ListarVagas = async (req, res, next) => {
         }
 
         const vagas = await Vaga.findAll({ where: condicoes });
+
+        const totalLivres = condicoes.estado === 1 
+            ? 0 
+            : vagas.filter(v => v.estado === 0).length;
 
         res.status(200).json({
             status: "sucesso",

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'; // para gerar o token JWT
 import { validationError, genericError, conflictError } from '../utils/error.utils.js';
 
 
-export const RegisterUser = async (req, res, next) => {
+export const registerUser = async (req, res, next) => {
     try {
 
         const { nome, email, password, tipo_utilizador } = req.body;
@@ -45,7 +45,7 @@ export const RegisterUser = async (req, res, next) => {
     }
 }
 
-export const GetUsers = async (req, res, next) => {
+export const getUsers = async (req, res, next) => {
     try {
         // .findAll() vai buscar todos os registos na tabela
         const users = await User.findAll({
@@ -70,7 +70,7 @@ export const GetUsers = async (req, res, next) => {
     }
 };
 
-export const LoginUser = async (req, res, next) => {
+export const loginUser = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 

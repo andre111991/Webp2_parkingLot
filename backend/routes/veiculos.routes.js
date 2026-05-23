@@ -1,11 +1,12 @@
 import express from "express";
+import { addVeiculo, getVeiculos, deleteVeiculo, getVeiculoById, updateVeiculo } from "../controllers/veiculo.controllers.js";
 
 const router = express.Router();
 
-router.post("/veiculos", AddVeiculo);
-router.get("/veiculos", GetVeiculos);
-router.delete("/veiculos/:id", DeleteVeiculo);
-router.get("/veiculos/:id", GetVeiculoById);
-router.put("/veiculos/:id", UpdateVeiculo);
+router.post("/", addVeiculo);
+router.get("/", getVeiculos);
+router.get("/:id", getVeiculoById);
+router.put("/:id", updateVeiculo);
+router.delete("/:id", deleteVeiculo);
 
 export default router;
