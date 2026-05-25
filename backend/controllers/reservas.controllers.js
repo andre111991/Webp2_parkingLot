@@ -1,4 +1,3 @@
-
 import { Reserva, Vaga, Veiculo } from '../models/db.config.js';
 import { validationError, genericError } from '../utils/error.utils.js';
 

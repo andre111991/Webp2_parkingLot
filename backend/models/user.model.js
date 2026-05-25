@@ -1,6 +1,12 @@
 export default (sequelize, DataTypes) => sequelize.define("User", {
 
-    nome: {
+    id_utilizador: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {

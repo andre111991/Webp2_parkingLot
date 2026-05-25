@@ -1,7 +1,7 @@
 
 
 // erro de validaçao para quando os dados de entrada não estão corretos
-export const validationError = (errors) => {
+export const ValidationError = (errors) => {
     const err = new Error("Validation failed");
     err.status = 400;
     err.errors = errors;
@@ -9,20 +9,20 @@ export const validationError = (errors) => {
 };
 
 // erro generico para erros internos do servidor 
-export const genericError = (message = "Internal Server Error") => {
+export const GenericError = (message = "Internal Server Error") => {
     const err = new Error(message);
     err.status = 500;
     return err;
 };
 
 // erro para quando ja existe uma conta com o mesmo email
-export const conflictError = (message) => {
+export const ConflictError = (message) => {
     const err = new Error(message);
     err.status = 409;
     return err; 
 };
 
-export const sequelizeValidationError = (errors) => {
+export const SequelizeValidationError = (errors) => {
     const err = new Error("Validation failed");
     err.status = 400;
     // if err.path is the same, group the error messages in an array for that field
