@@ -76,13 +76,13 @@ Carregamento.belongsTo(Vaga, { foreignKey: 'id_vaga' });
 //............................................................//
 
 
-try {
-    await sequelize.sync({ alter: true }); // use { force: true } to drop and recreate tables on every sync (use with caution in production)
-    console.log("All models were synchronized successfully.");
+ try {
+     await sequelize.sync({ force: true }); // use { force: true } to drop and recreate tables on every sync (use with caution in production)
+     console.log("All models were synchronized successfully.");
 } catch (error) {
     console.error("Error synchronizing models:", error);
     process.exit(1);
-}
+ }
 
 export { 
 

@@ -21,10 +21,10 @@ app.use("/utilizadores", UserRoutes);
 
 
 app.use((req, res, next) => {
-    const error = new Error(`Route ${req.method} ${req.originalUrl} not found`);
+   const error = new Error(`Route ${req.method} ${req.originalUrl} not found`);
     error.status = 404;
-    next(error);
-});
+     next(error);
+ });
 
 app.use((err, req, res, next) => {
     res.status(err.status || 500).json({
