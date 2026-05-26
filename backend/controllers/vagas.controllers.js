@@ -47,6 +47,6 @@ export const listarVagas = async (req, res, next) => {
         });
 
     } catch (error) {
-        next(genericError(error.message));
+        next(GenericError(error.message));
     }
 };

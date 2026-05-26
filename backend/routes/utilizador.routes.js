@@ -1,15 +1,15 @@
 import express from "express";
 
-import { RegisterUser, GetUsers, LoginUser } from '../controllers/user.controllers.js';
-import { ValidateRegister, ValidateLogin  } from '../middlewares/user.middleware.js';
+import { registerUser, getUsers, loginUser } from '../controllers/user.controllers.js';
+import { validateRegister, validateLogin  } from '../middlewares/user.middleware.js';
 
 const router = express.Router();
 
 // Rotas Cliente
-router.post("/", ValidateRegister, RegisterUser);
-router.get("/", GetUsers);
+router.post("/", validateRegister, registerUser);
+router.get("/", getUsers);
 //router.put("/" , updateUser);
-router.post("/login", ValidateLogin, LoginUser);
+router.post("/login", validateLogin, loginUser);
 //router.delete("/:id", deleteUser);
 
 
