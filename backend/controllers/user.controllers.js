@@ -89,7 +89,7 @@ export const loginUser = async (req, res, next) => {
         const token = jwt.sign(
             { id: user.id_utilizador, tipo: user.tipo_utilizador },
             process.env.JWT_SECRET,
-            { expiresIn: '1d' } // O token expira em 1 dia !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ALTERAR PARA 15MIN
+            { expiresIn: '15m' } // O token expira em 15 minutos 
         );
 
         // 4. Enviar resposta

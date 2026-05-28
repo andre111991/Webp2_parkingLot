@@ -1,7 +1,7 @@
 import express from "express";
 
-import { iniciarCarregamento, finalizarCarregamento, historicoCarregamento } from "../controllers/carregamento.controllers.js";
-import { verificarToken } from "../middlewares/user.middleware.js";
+import { iniciarCarregamento, finalizarCarregamento } from "../controllers/carregamento.controllers.js";
+import { verificarToken } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
@@ -12,6 +12,6 @@ router.post("/", verificarToken, iniciarCarregamento);
 router.put("/:id/finalizar", verificarToken, finalizarCarregamento); 
 
 // 3. Utilizador vê carregamentos feitos anteriormente
-router.get("/utilizadores/:id", verificarToken, historicoCarregamento); 
+// router.get("/utilizadores/:id", verificarToken, historicoCarregamento); 
 
 export default router;

@@ -35,7 +35,7 @@ export default (sequelize, DataTypes) => sequelize.define("User", {
     },
 
     tipo_utilizador: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.ENUM('admin', 'cliente'),
         allowNull: false,
         defaultValue: 'cliente'
     }

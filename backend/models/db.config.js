@@ -1,4 +1,5 @@
 import { Sequelize, DataTypes } from "sequelize";
+import bcrypt from 'bcrypt';
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,
@@ -6,7 +7,8 @@ const sequelize = new Sequelize(
     process.env.DB_PASSWORD,
     {
         host: process.env.DB_HOST,
-        dialect:process.env.DB_DIALECT
+        dialect:process.env.DB_DIALECT,
+        logging: false
     }
 );
 
@@ -76,13 +78,27 @@ Carregamento.belongsTo(Vaga, { foreignKey: 'id_vaga' });
 //............................................................//
 
 
- try {
-     await sequelize.sync({ force: true }); // use { force: true } to drop and recreate tables on every sync (use with caution in production)
-     console.log("All models were synchronized successfully.");
+try {
+    // 1. Sincroniza a base de dados
+    await sequelize.sync({ alter: true }); //force alter
+    console.log("All models were synchronized successfully.");
+
+    // 2. Lógica de SEED: Criar Admins de teste
+    const count = await User.count({ where: { tipo_utilizador: 'admin' } });
+    
+    if (count === 0) {      // quando reinicia o servidor (force) ele corre este try para criar admins, se ja houver admins ele não cria mais
+        const passwordHash = await bcrypt.hash('Admin123@', 10);
+        await User.bulkCreate([
+            { name: 'Admin1', email: 'admin1@admin.com', password: passwordHash, tipo_utilizador: 'admin' },
+            { name: 'Admin2', email: 'admin2@admin.com', password: passwordHash, tipo_utilizador: 'admin' }
+        ]);
+        console.log("Admins de teste criados com sucesso!");
+    }
+
 } catch (error) {
     console.error("Error synchronizing models:", error);
     process.exit(1);
- }
+}
 
 export { 
 

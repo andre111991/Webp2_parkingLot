@@ -4,14 +4,13 @@ import { validationError, genericError } from '../utils/error.utils.js';
 // 1. Adicionar um novo veículo (Cliente)
 export const addVeiculo = async (req, res, next) => {
     try {
-        const id_utilizador = req.userId; // Vem do Token
-        const { matricula, marca, modelo, tipo_combustivel } = req.body;
+        // CORREÇÃO 1: Aceder ao ID via req.user.id (como definido no middleware)
+        const id_utilizador = req.user.id; 
+        
+        // CORREÇÃO 2: Extrair também marca e modelo do req.body
+        const { matricula, tipo_combustivel } = req.body;
 
-        if (!matricula || !marca || !modelo || !tipo_combustivel) {
-            const error = validationError("Os campos matricula, marca, modelo e tipo_combustivel são obrigatórios.");
-            error.status = 400;
-            return next(error);
-        }
+        
 
         const veiculoDuplicado = await Veiculo.findOne({ where: { matricula } });
         if (veiculoDuplicado) {
@@ -21,7 +20,9 @@ export const addVeiculo = async (req, res, next) => {
         }
 
         const novoVeiculo = await Veiculo.create({
-            matricula, marca, modelo, tipo_combustivel, id_utilizador
+            matricula, 
+            tipo_combustivel, 
+            id_utilizador // Agora o id_utilizador tem um valor real!
         });
 
         return res.status(201).json({
@@ -30,6 +31,8 @@ export const addVeiculo = async (req, res, next) => {
             dados: novoVeiculo
         });
     } catch (error) {
+        // DICA: Faz um console.log aqui para veres exatamente o erro no terminal!
+        console.log("Erro ao criar veiculo:", error); 
         return next(genericError(error.message));
     }
 };
