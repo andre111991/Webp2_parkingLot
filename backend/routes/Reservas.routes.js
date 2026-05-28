@@ -4,6 +4,7 @@ import { verificarToken } from "../middlewares/user.middleware.js";
 
 const router = express.Router();
 
+//Rotas Cliente
 // 1. Efetua a reserva para o veículo e vaga disponível
 router.post("/", verificarToken, reservar); 
 
@@ -12,5 +13,9 @@ router.get("/utilizadores/:id", verificarToken, verReservas);
 
 // 3. Cancelar ou apagar reserva
 router.delete("/:id", verificarToken, cancelarReserva); 
+
+//Rotas Admin
+router.get("/admin/todas", verificarToken, verificarAdmin, listarTodasReservas);
+router.delete("/admin/:id_reserva", verificarToken, verificarAdmin, apagarReservaAdmin);
 
 export default router;

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { iniciarCarregamento, finalizarCarregamento, historicoCarregamento } from "../controllers/carregador.controllers.js";
+import { iniciarCarregamento, finalizarCarregamento, historicoCarregamento } from "../controllers/carregamento.controllers.js";
 import { verificarToken } from "../middlewares/user.middleware.js";
 
 const router = express.Router();
