@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'; 
 import { validationError, genericError, conflictError } from '../utils/error.utils.js';
 
-
 export const registerUser = async (req, res, next) => {
     try {
 
@@ -54,8 +53,8 @@ export const getUsers = async (req, res, next) => {
         });
 
         // Verificamos se a lista está vazia
-        if (users.length === 0) {
-            return res.status(200).json({ message: "Ainda não existem utilizadores registados.", count: 0, users: [] });
+        if (users.length === 2) {
+            return res.status(200).json({ message: "Só estão registados os admins.", count: 2, users: [] });
         }
 
         // Respondemos com a lista e a contagem
@@ -70,40 +69,3 @@ export const getUsers = async (req, res, next) => {
     }
 };
 
-export const loginUser = async (req, res, next) => {
-    try {
-        const { email, password } = req.body;
-
-        const user = await User.findOne({ where: { email } });
-        if (!user) {
-            return next(validationError("Credenciais inválidas.")); 
-        }
-
-        // 2. Verificar a password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return next(validationError("Credenciais inválidas."));
-        }
-
-        // 3. Gerar o Token JWT
-        const token = jwt.sign(
-            { id: user.id_utilizador, tipo: user.tipo_utilizador },
-            process.env.JWT_SECRET,
-            { expiresIn: '15m' } // O token expira em 15 minutos 
-        );
-
-        // 4. Enviar resposta
-        res.status(200).json({
-            message: "Login efetuado com sucesso!",
-            token: token,
-            user: {
-                id: user.id_utilizador,
-                name: user.name,
-                tipo: user.tipo_utilizador
-            }
-        });
-
-    } catch (error) {
-        next(genericError(error.message));
-    }
-};

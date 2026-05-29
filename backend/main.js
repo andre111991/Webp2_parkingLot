@@ -1,8 +1,10 @@
 import express from "express";
+import cookieParser from 'cookie-parser'; // Middleware para lidar com cookies
 import 'dotenv/config';
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser()); //coloca o resultado dentro do objeto req.cookies
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "localhost";
