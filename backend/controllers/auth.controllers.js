@@ -34,8 +34,8 @@ export const loginUser = async (req, res, next) => {
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,  // O JS do browser não pode ler este cookie
-            secure: process.env.NODE_ENV === 'production', // Só envia via HTTPS em produção
-            sameSite: 'Strict', // Proteção contra ataques CSRF
+            secure: process.env.NODE_ENV === 'production', // Só envia via se for HTTPS 
+            sameSite: 'Strict', // Proteção contra ataques CSRF , Impede que o cookie seja enviado se o pedido vier de um site externo.
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias em milissegundos
         });
 
@@ -88,4 +88,16 @@ export const refreshToken = async (req, res, next) => {
         // Se o token for inválido ou tiver expirado, damos erro 403
         return res.status(403).json({ message: "Refresh token inválido ou expirado!" });
     }
+};
+
+export const logoutUser = (req, res) => {
+    // Para fazer o logout, "limpamos" o cookie deixando de produzir novos acessTokens
+    // No entanto tem uma brecha que o ultimo acessToken ainda pode ser usado até expirar
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict'
+    });
+
+    res.status(200).json({ message: "Logout efetuado com sucesso!" });
 };

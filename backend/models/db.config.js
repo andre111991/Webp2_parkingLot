@@ -80,7 +80,7 @@ Carregamento.belongsTo(Vaga, { foreignKey: 'id_vaga' });
 
 try {
     // 1. Sincroniza a base de dados
-    await sequelize.sync({ force: true }); //force alter
+    await sequelize.sync({ alter: true }); //force alter
     console.log("All models were synchronized successfully.");
 
     // 2. Lógica de SEED: Criar Admins de teste

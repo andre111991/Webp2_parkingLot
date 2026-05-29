@@ -69,3 +69,75 @@ export const getUsers = async (req, res, next) => {
     }
 };
 
+export const getMyProfile = async (req, res, next) => {
+    try {
+        // O id vem do token, injetado pelo middleware 'verificarToken'
+        const userId = req.user.id; 
+
+        const user = await User.findByPk(userId, {
+            attributes: { exclude: ['password'] } // Nunca devolver a password!
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: "Utilizador não encontrado." });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        next(genericError(error.message));
+    }
+};
+
+export const changePassword = async (req, res, next) => {
+    try {
+        const { passwordAntiga, novaPassword } = req.body;
+        const userId = req.user.id;
+
+        // 1. Ir buscar o utilizador à BD
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ message: "Utilizador não encontrado." });
+        }
+
+        // 2. Verificar se a password antiga está correta
+        const isMatch = await bcrypt.compare(passwordAntiga, user.password);
+        if (!isMatch) {
+            return next(validationError("A password antiga está incorreta."));
+        }
+
+        const hashedPassword = await bcrypt.hash(novaPassword, 10);
+
+        // 4. Atualizar na BD
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json({ message: "Password alterada com sucesso!" });
+    } catch (error) {
+        next(genericError(error.message));
+    }
+};
+
+export const deleteUser = async (req, res, next) => {
+    try {
+        const userIdParaApagar = req.params.id; // Delete http://localhost:3000/utilizadores/5 por exemplo
+
+        if (parseInt(userIdParaApagar) === req.user.id) {
+            return res.status(400).json({ message: "Não podes eliminar a tua própria conta!" });
+        }
+
+        // 1. Tentar encontrar e apagar o utilizador    
+        const resultado = await User.destroy({
+            where: { id_utilizador: userIdParaApagar }
+        });
+
+        // 2. Verificar se o utilizador existia mesmo
+        if (resultado === 0) {
+            return res.status(404).json({ message: "Utilizador não encontrado." });
+        }
+
+        res.status(200).json({ message: "Utilizador eliminado com sucesso!" });
+    } catch (error) {
+        next(genericError(error.message));
+    }
+};
+
