@@ -17,7 +17,7 @@ router.put("/password", verificarToken, changePassword); // NOVA
 router.post("/refresh", refreshToken);  // Rota para obter um novo token usando o refresh token
 
 // Rotas Admin
-router.get("/", verificarToken, verificarAdmin, getUsers);
-router.delete("/delete/:id", verificarToken, verificarAdmin, deleteUser);
+router.get("/admin", verificarToken, verificarAdmin, getUsers);
+router.delete("/admin/delete/:id", verificarToken, verificarAdmin, deleteUser);
 
 export default router;

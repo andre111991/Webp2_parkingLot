@@ -41,3 +41,15 @@ export const adminOnlyError = () => {
     err.status = 403;
     return err;
 }
+
+export const notFoundError = (resource) => {
+    const err = new Error(`${resource} não encontrado`);
+    err.status = 404;
+    return err;
+};
+
+export const forbiddenError = (message = "Acesso proibido") => {
+    const err = new Error(message);
+    err.status = 403;
+    return err;
+};
