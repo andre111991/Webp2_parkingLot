@@ -32,6 +32,47 @@ export const getMeusVeiculos = async (req, res, next) => {
     }
 };
 
+export const updateVeiculo = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { matricula, tipo_combustivel } = req.body;
+
+        // O middleware verificarDonoVeiculo já garantiu que o veículo existe 
+        // e pertence ao utilizador. Agora fazemos o update.
+        const [updatedRows] = await Veiculo.update(
+            { matricula, tipo_combustivel },
+            { where: { id_veiculo: id } }
+        );
+
+        if (updatedRows === 0) {
+            return res.status(400).json({ message: "Nenhuma alteração efetuada." });
+        }
+
+        res.status(200).json({ message: "Veículo atualizado com sucesso!" });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const deleteVeiculo = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // O middleware já verificou se o veículo existe e se pertence ao utilizador
+        const deletedRows = await Veiculo.destroy({
+            where: { id_veiculo: id }
+        });
+
+        if (deletedRows === 0) {
+            return res.status(404).json({ message: "Veículo não encontrado." });
+        }
+
+        res.status(200).json({ message: "Veículo eliminado com sucesso!" });
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 
 //-------------------------------------------------------------------------Admin-------------------------------------------------------------------------
@@ -60,6 +101,26 @@ export const getAllVeiculos = async (req, res, next) => {
         }));
 
         res.status(200).json(resultadoFinal);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// mesma funçao do deleteVeiculo, mas sem verificar se o dono é o req.user.id, porque o admin pode apagar qualquer veículo e a msg de sucesso e diferente 
+export const adminDeleteVeiculo = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // O admin apaga pelo ID, sem verificar se o dono é o req.user.id
+        const deletedRows = await Veiculo.destroy({
+            where: { id_veiculo: id }
+        });
+
+        if (deletedRows === 0) {
+            return res.status(404).json({ message: "Veículo não encontrado." });
+        }
+
+        res.status(200).json({ message: "Veículo eliminado pelo Administrador com sucesso!" });
     } catch (error) {
         next(error);
     }
