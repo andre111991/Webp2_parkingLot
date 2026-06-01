@@ -92,7 +92,47 @@ try {
             { name: 'Admin1', email: 'admin1@admin.com', password: passwordHash, tipo_utilizador: 'admin' },
             { name: 'Admin2', email: 'admin2@admin.com', password: passwordHash, tipo_utilizador: 'admin' }
         ]);
-        console.log("Admins de teste criados com sucesso!");
+        console.log("Admin users created successfully!");
+    }
+
+  const vagaCount = await Vaga.count();
+    
+    if (vagaCount === 0) {
+        const novasVagas = [];
+        let letraIndex = 0; // Contador para gerar AA, AB, AC...
+
+        // Função auxiliar para gerar letra dupla com este metodo da 26x26 vagas, ou seja, de AA a ZZ (total 676 vagas,criei só 50)
+        const gerarIdentificador = (index) => {
+            const primeira = String.fromCharCode(65 + Math.floor(index / 26));
+            const segunda = String.fromCharCode(65 + (index % 26));
+            return `${primeira}${segunda}`;
+        };
+
+        // 25 Vagas de combustão 
+        for (let i = 0; i <25 ; i++) {
+            novasVagas.push({ 
+                andar: 1, 
+                cor: 'azul', 
+                letra: gerarIdentificador(letraIndex++), 
+                tipo: 'combustao', 
+                estado: '0' 
+            });
+        }
+
+        // 25 Vagas de elétrico 
+        for (let i = 0; i <25 ; i++) {
+            novasVagas.push({ 
+                andar: 1, 
+                cor: 'verde', 
+                letra: gerarIdentificador(letraIndex++), 
+                tipo: 'eletrico', 
+                estado: '0' 
+            });
+        }
+
+        await Vaga.bulkCreate(novasVagas);
+
+        console.log("50 vagas criadas com sucesso (25 combustao, 25 eletrico)!");
     }
 
 } catch (error) {

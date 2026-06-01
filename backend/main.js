@@ -12,13 +12,13 @@ const HOST = process.env.HOST || "localhost";
 import userRoutes from "./routes/utilizador.routes.js";
 import veiculoRoutes from "./routes/veiculos.routes.js";
 // import reservasRoutes from "./routes/reservas.routes.js";
-// import vagasRoutes from "./routes/vagas.routes.js";
+import vagasRoutes from "./routes/vagas.routes.js";
 import carregamentoRoutes from "./routes/carregamento.routes.js";
 
 app.use("/utilizadores", userRoutes);
 app.use("/veiculos", veiculoRoutes);
 // app.use("/reservas", reservasRoutes);
-// app.use("/vagas", vagasRoutes);
+app.use("/vagas", vagasRoutes);
 app.use("/carregamentos", carregamentoRoutes);
 
 
