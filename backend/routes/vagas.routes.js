@@ -6,7 +6,8 @@ const router = express.Router();
 
 // 1. Listar vagas
 router.get("/", verificarToken, getAllVagas);
-//router.get("/:id", verificarToken, getVagaById);
+
+//admin routes
 
 //router.post("/admin", verificarToken, verificarAdmin, createVaga);
 //router.put("/admin/:id", verificarToken, verificarAdmin, updateVaga);

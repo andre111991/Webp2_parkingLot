@@ -30,7 +30,13 @@ export default (sequelize, DataTypes) => sequelize.define("Vaga", {
         type: DataTypes.TINYINT,
         allowNull: false,
         defaultValue: 0 // 0 = Livre, 1 = Ocupada
-    }
+    },
+
+    potencia: {
+    type: DataTypes.FLOAT, // ou INTEGER, dependendo da tua necessidade
+    allowNull: true,      // Permite ser NULL para vagas de combustão
+    defaultValue: null
+}
 
 }, {
     tableName: 'Vaga',

@@ -42,11 +42,6 @@ const Reserva = ReservaModel(sequelize, DataTypes);
 import CarregamentoModel from "./carregamento.model.js";
 const Carregamento = CarregamentoModel(sequelize, DataTypes);
 
-
-//modelo carregador
-import CarregadorModel from "./carregador.model.js";
-const Carregador = CarregadorModel(sequelize, DataTypes);
-
 //..........................Relações..........................//
 
 User.hasMany(Veiculo, { foreignKey: 'id_utilizador', onDelete: 'CASCADE' }); //Se um utilizador apagar a sua conta, 
@@ -66,11 +61,6 @@ Reserva.belongsTo(Vaga, { foreignKey: 'id_vaga' });
 // Um Veiculo tem muitos Carregamentos. Se apagarmos o Veiculo, o histórico de carregamento pode ser restrito ou apagado (CASCADE).
 Veiculo.hasMany(Carregamento, { foreignKey: 'id_veiculo', onDelete: 'CASCADE' });
 Carregamento.belongsTo(Veiculo, { foreignKey: 'id_veiculo' });
-
-// Um Carregamento tem um Carregador associado. 
-// Se o Carregamento for apagado, o Carregador fica livre (SET NULL).
-Carregamento.hasMany(Carregador, { foreignKey: 'id_carregamento', onDelete: 'SET NULL' });
-Carregador.belongsTo(Carregamento, { foreignKey: 'id_carregamento' });
 
 Vaga.hasMany(Carregamento, { foreignKey: 'id_vaga', onDelete: 'RESTRICT' });
 Carregamento.belongsTo(Vaga, { foreignKey: 'id_vaga' });
@@ -115,7 +105,8 @@ try {
                 cor: 'azul', 
                 letra: gerarIdentificador(letraIndex++), 
                 tipo: 'combustao', 
-                estado: '0' 
+                estado: '0' ,
+                potencia: null // Combustão não tem potência de carga
             });
         }
 
@@ -126,7 +117,8 @@ try {
                 cor: 'verde', 
                 letra: gerarIdentificador(letraIndex++), 
                 tipo: 'eletrico', 
-                estado: '0' 
+                estado: '0',
+                potencia: 7.4 // Exemplo de potência para elétricos
             });
         }
 
@@ -148,6 +140,5 @@ export {
     Vaga,
     Reserva,
     Carregamento,
-    Carregador
 
 };
