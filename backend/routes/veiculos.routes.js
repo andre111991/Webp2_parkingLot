@@ -1,4 +1,5 @@
 import express from "express";
+
 import { addVeiculo,getMeusVeiculos,getAllVeiculos,updateVeiculo,deleteVeiculo,adminDeleteVeiculo } from "../controllers/veiculo.controllers.js";
 import { verificarToken, verificarAdmin } from "../middlewares/auth.middleware.js";
 import { validarVeiculoInput, verificarDonoVeiculo } from "../middlewares/veiculo.middleware.js";

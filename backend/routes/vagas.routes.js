@@ -1,4 +1,5 @@
 import express from "express";
+
 import { getAllVagas,getVagaById,createVaga,updateVaga,deleteVaga} from "../controllers/vagas.controllers.js";
 import { verificarToken,verificarAdmin} from "../middlewares/auth.middleware.js";
 
