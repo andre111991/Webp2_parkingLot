@@ -1,26 +1,18 @@
 import express from "express";
 
-import { verificarToken,verificarAdmin} from "../middlewares/auth.middleware.js";
-import { criarReserva } from "../controllers/reservas.controllers.js";
+import { verificarToken,verificarAdmin,} from "../middlewares/auth.middleware.js";
+import { criarReserva,listarMinhasReservas,getReservasPorUtilizador,cancelarReservaAdmin,marcarComoPago } from "../controllers/reservas.controllers.js";
 import { validarReservaInput, verificarDonoDoVeiculo } from '../middlewares/reservas.middleware.js';
 
 const router = express.Router();
 
 router.post("/", verificarToken, validarReservaInput, verificarDonoDoVeiculo, criarReserva);
-// router.get("/minhas", verificarToken, getMinhasReservas);
-// router.delete("/:id", verificarToken, verificarDonoDaReserva, cancelarReserva);
-
-//// Histórico completo (reservas passadas e futuras)
-//router.get("/historico", verificarToken, getHistoricoReservas);
+router.get("/minhas-reservas", verificarToken, listarMinhasReservas);
 
 //admin routes
-
-//router.get("/admin", verificarToken, verificarAdmin, getAllReservas);
-//router.patch("/:id/pagar", verificarToken, verificarAdmin, marcarComoPago);
-
-
-
-
+router.get("/admin/utilizador/:id_utilizador", verificarToken, verificarAdmin, getReservasPorUtilizador);
+router.delete("/admin/cancelar/:id_reserva", verificarToken, verificarAdmin, cancelarReservaAdmin);
+router.patch("/admin/:id_reserva/pagar", verificarToken, verificarAdmin, marcarComoPago);
 
 
 

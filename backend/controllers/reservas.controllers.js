@@ -1,4 +1,4 @@
-import {Reserva,Vaga,Veiculo }  from '../models/db.config.js';
+import { Reserva, Vaga, Veiculo, User } from '../models/db.config.js'; 
 import { notFoundError, validationError } from '../utils/error.utils.js';
 import { Op } from 'sequelize';
 
@@ -75,3 +75,133 @@ export const criarReserva = async (req, res, next) => {
         next(error); 
     }
 }
+
+export const listarMinhasReservas = async (req, res, next) => {
+    try {
+        const id_utilizador = req.user.id;
+
+        const reservas = await Reserva.findAll({
+            where: { id_utilizador: id_utilizador },
+            include: [
+                { 
+                    model: Veiculo, 
+                    attributes: ['matricula', 'tipo_combustivel'] 
+                },
+                { 
+                    model: Vaga, 
+                    attributes: ['andar', 'cor', 'letra', 'tipo', 'estado', 'potencia'] 
+                }
+            ],
+            order: [['data_hora_inicio', 'DESC']]
+        });
+
+        // Verificação: Se o array estiver vazio, retorna a mensagem
+        if (reservas.length === 0) {
+            return res.status(200).json({ 
+                message: "Não tens reservas feitas até ao momento." 
+            });
+        }
+
+        res.status(200).json(reservas);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getReservasPorUtilizador = async (req, res, next) => {
+    try {
+        const { id_utilizador } = req.params; 
+
+        // 1. Validação de existência do utilizador usando o modelo 'User'
+        const utilizador = await User.findByPk(id_utilizador);
+        
+        if (!utilizador) {
+            return next(notFoundError("Utilizador"));
+        }
+
+        // 2. Busca de reservas
+        const reservas = await Reserva.findAll({
+            where: { id_utilizador: id_utilizador },
+            include: [
+                { 
+                    model: Veiculo, 
+                    attributes: ['matricula', 'tipo_combustivel'] 
+                },
+                { 
+                    model: Vaga, 
+                    attributes: ['andar', 'cor', 'letra', 'tipo', 'estado', 'potencia'] 
+                }
+            ],
+            order: [['data_hora_inicio', 'DESC']]
+        });
+
+        // 3. Validação de histórico vazio
+        if (reservas.length === 0) {
+            return res.status(200).json({ 
+                message: "Este utilizador não tem reservas feitas até ao momento." 
+            });
+        }
+
+        res.status(200).json(reservas);
+        
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const cancelarReservaAdmin = async (req, res, next) => {
+    try {
+        const { id_reserva } = req.params;
+
+        // 1. Validar se quem faz o pedido é Admin
+        if (req.user.role !== 'admin') {
+            return next(validationError({ message: "Acesso negado. Apenas administradores podem cancelar reservas." }));
+        }
+
+        // 2. Encontrar a reserva
+        const reserva = await Reserva.findByPk(id_reserva);
+        if (!reserva) {
+            return next(notFoundError("Reserva"));
+        }
+
+        // 3. Libertar a vaga (mudar estado para 0)
+        const vaga = await Vaga.findByPk(reserva.id_vaga);
+        if (vaga) {
+            await vaga.update({ estado: 0 });
+        }
+
+        // 4. Forçar o cancelamento (Apagar da base de dados)
+        await reserva.destroy();
+
+        res.status(200).json({ message: "Reserva cancelada com sucesso e vaga libertada." });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const marcarComoPago = async (req, res, next) => {
+    try {
+        const { id_reserva } = req.params;
+
+        // 2. Encontrar a reserva
+        const reserva = await Reserva.findByPk(id_reserva);
+        if (!reserva) {
+            return next(notFoundError("Reserva"));
+        }
+
+        // 3. Alterar o estado do pagamento para 1
+        await reserva.update({ 
+            pago: 1,
+            data_pagamento: new Date() // Opcional: regista a data atual como data de pagamento
+        });
+
+        res.status(200).json({ 
+            message: "Reserva marcada como paga com sucesso.",
+            reserva_atualizada: reserva 
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};

@@ -9,13 +9,13 @@ export const registerUser = async (req, res, next) => {
         const { name, email, password, tipo_utilizador } = req.body;
 
         if (!name || !email || !password) {
-            const error = validationError("Name, email and password are required.");
+            const error = validationError("Name, email and password são obrigatórios.");
             return next(error);
         }
 
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
-            const error = conflictError("A user with this email already exists.");
+            const error = conflictError("Já existe um utilizador com este email.");
             return next(error);
         }
 
