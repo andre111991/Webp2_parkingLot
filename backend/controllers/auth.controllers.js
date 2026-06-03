@@ -23,7 +23,7 @@ export const loginUser = async (req, res, next) => {
         const token = jwt.sign(
             { id: user.id_utilizador, tipo: user.tipo_utilizador },
             process.env.JWT_SECRET,
-            { expiresIn: '15m' } // O token expira em 15 minutos 
+            { expiresIn: '45m' } // O token expira em 15 minutos 
         );
 
         const refreshToken = jwt.sign(
