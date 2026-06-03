@@ -1,0 +1,158 @@
+/* --- Contentor Principal --- */
+.vagas-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+/* --- Menu / Logo Lateral --- */
+.logo-vagas {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    color: #1a1a1a;
+}
+
+/* --- Barra de Filtros Superior --- */
+.vagas-filters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Seleção de Piso (Estilo Cápsula) */
+.piso-selector-container {
+    display: flex;
+    background-color: #f2f2f2;
+    padding: 6px;
+    border-radius: 40px;
+    border: 1px solid #e0e0e0;
+}
+
+.piso-btn {
+    border: none;
+    background: transparent;
+    padding: 12px 35px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #666;
+}
+
+.piso-btn.active {
+    background-color: #ffffff;
+    color: #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.piso-btn:hover:not(.active) {
+    color: #000;
+}
+
+/* Checkboxes Horizontais */
+.checkbox-group-horizontal {
+    display: flex;
+    gap: 25px;
+}
+
+.custom-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    cursor: pointer;
+}
+
+.custom-check input {
+    width: 18px;
+    height: 18px;
+    accent-color: #4a5d1b;
+}
+
+/* --- Grid de Cards (Ajustados) --- */
+.cards-grid {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 60px;
+}
+
+.stat-card {
+    background-color: #d7dbcf; /* Verde oliva claro */
+    flex: 1;
+    max-width: 350px;
+    height: 340px; /* Altura reduzida */
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card .number {
+    font-size: 100px; /* Tamanho do número equilibrado */
+    font-weight: 400;
+    color: #4a4a4a;
+    line-height: 1;
+    margin-bottom: 15px;
+}
+
+.stat-card p {
+    font-size: 20px;
+    color: #5a5a5a;
+    line-height: 1.2;
+    max-width: 200px;
+}
+
+/* --- Botão de Reserva --- */
+.reserva-footer {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-reserva-vagas {
+    background-color: #4a5d1b;
+    color: white;
+    border: none;
+    padding: 22px;
+    font-size: 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 650px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-reserva-vagas:hover {
+    background-color: #3a4a15;
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+    .cards-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+    .stat-card {
+        width: 100%;
+    }
+    .vagas-filters {
+        flex-direction: column;
+    }
+}

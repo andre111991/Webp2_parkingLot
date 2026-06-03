@@ -1,0 +1,181 @@
+/* Reset Geral */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: white;
+    color: #1a1a1a;
+}
+
+/* Navegação Atualizada e Centrada */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 80px;
+    max-width: 1440px;
+    margin: 0 auto;
+    position: relative; /* Base essencial para poder centrar de forma absoluta a lista */
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    z-index: 2; /* Garante que fica acima de qualquer sobreposição */
+}
+
+.nav-links {
+    display: flex;
+    gap: 35px;
+    list-style: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* Força a barra de navegação a ficar rigorosamente ao centro do ecrã */
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #1a1a1a;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Novo estilo para o Perfil no Canto Direito */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.profile-icon {
+    width: 32px;
+    height: 32px;
+    color: #000000;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+.hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 85px;
+    line-height: 1.2; /* Corrigido de 2.0 para evitar grandes espaços verticais indesejados */
+    max-width: 900px;
+    margin: 0 auto;
+    font-weight: 400;
+    letter-spacing: -1px;
+}
+
+/* Mockup Tablet */
+.container-tablet {
+    position: relative;
+    max-width: 1100px;
+    margin: 40px auto 0;
+    padding: 0 20px;
+}
+
+.fundo-verde {
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    height: 400px;
+    background-color: #93a27f;
+    border-radius: 40px;
+    z-index: 1;
+}
+
+.tablet {
+    position: relative;
+    z-index: 2;
+    background: #000;
+    border-radius: 45px;
+    padding: 12px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.15);
+}
+
+.ecra {
+    position: relative;
+    background-color: #333;
+    border-radius: 35px;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+}
+
+.imagem-fundo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.85);
+}
+
+/* Dashboard Overlay */
+.overlay-stats {
+    position: absolute;
+    inset: 0;
+    padding: 50px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.header-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.breadcrumb {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+
+.main-numbers {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+}
+
+.percentagem {
+    font-size: 80px;
+    font-weight: 300;
+}
+
+.subtitulo-serif {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.btn-regiao {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 12px;
+}

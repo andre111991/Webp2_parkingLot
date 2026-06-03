@@ -1,0 +1,110 @@
+/* carregamentos.css */
+
+.pricing-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.pricing-header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 64px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.pricing-header p {
+    font-family: 'Inter', sans-serif;
+    max-width: 700px;
+    margin: 0 auto 30px;
+    color: #666;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.btn-reserva-pills {
+    background-color: #e2e8d8; /* Verde muito claro da imagem */
+    border: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 80px;
+}
+
+/* Grelha de Preços */
+.pricing-grid {
+    display: flex;
+    border-top: 1px solid #eee;
+    margin-top: 40px;
+    position: relative;
+}
+
+/* Linha divisória central */
+.pricing-grid::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #eee;
+}
+
+.pricing-card {
+    flex: 1;
+    padding: 40px;
+    text-align: left;
+}
+
+.card-header h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.gray-text {
+    color: #666;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+}
+
+.features-list li {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 20px 0;
+    border-bottom: 1px solid #f9f9f9;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+/* O checkmark (v) antes do texto */
+.features-list li::before {
+    content: "✓";
+    margin-right: 15px;
+    color: #4a5d1b;
+    font-weight: bold;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .pricing-grid {
+        flex-direction: column;
+    }
+    .pricing-grid::after {
+        display: none;
+    }
+    .pricing-header h1 {
+        font-size: 40px;
+    }
+}

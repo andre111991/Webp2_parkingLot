@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartVaga - Painel de Perfil</title>
+    <link rel="stylesheet" href="menu.css">
+</head>
+<body>
+
+    <div class="modal-container">
+        
+        <button type="button" class="btn-fechar" id="btn-fechar-modal">&times;</button>
+        
+        <div class="perfil-topo">
+            <div class="avatar-icone">
+                <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <h2 id="user-display-name">Nome</h2>
+        </div>
+
+        <div class="modal-corpo">
+            
+            <nav class="menu-lateral" id="menu-perfil">
+                <button type="button" class="btn-menu active" data-aba="perfil">
+                    <span class="icone-menu">📝</span> Editar Perfil
+                </button>
+                <button type="button" class="btn-menu" data-aba="atividade">
+                    <span class="icone-menu">🕒</span> Atividade
+                </button>
+                <button type="button" class="btn-menu" data-aba="garagem">
+                    <span class="icone-menu">🚗</span> Garagem
+                </button>
+                <button type="button" class="btn-menu" data-aba="pagamento">
+                    <span class="icone-menu">💳</span> Pagamento
+                </button>
+            </nav>
+
+            <div class="conteudo-central" id="zona-conteudo">
+                
+                <div class="aba-titulo">
+                    <h3>📝 Editar Perfil</h3>
+                </div>
+
+                <form class="form-perfil" id="form-editar-perfil">
+                    <div class="form-linha">
+                        <div class="form-grupo">
+                            <label for="input-nome">Nome</label>
+                            <input type="text" id="input-nome" placeholder="O teu nome">
+                        </div>
+                        
+                        <div class="form-grupo">
+                            <label for="input-email">Email</label>
+                            <input type="email" id="input-email" placeholder="O teu email">
+                        </div>
+                    </div>
+
+                    <div class="form-linha">
+                        <div class="form-grupo m-metade">
+                            <label for="input-password">Password</label>
+                            <input type="password" id="input-password" placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <div class="form-acoes">
+                        <button type="submit" class="btn-acao btn-editar" id="btn-guardar-perfil">
+                            <span class="icone-botao">📝</span> Editar
+                        </button>
+                        
+                        <button type="button" class="btn-acao btn-eliminar" id="btn-eliminar-conta">
+                            <span class="icone-botao">🗑️</span> Eliminar conta
+                        </button>
+                    </div>
+                </form>
+
+            </div> </div> </div> <div class="popup-overlay" id="overlay-add-veiculo">
+        <div class="popup-container">
+            
+            <button type="button" class="popup-fechar" id="btn-fechar-popup">&times;</button>
+            
+            <div class="popup-topo">
+                <span class="popup-icone">🚗</span>
+                <h3>Veículo</h3>
+            </div>
+
+            <form id="form-add-veiculo">
+                <div class="popup-linha-matricula">
+                    <div class="seletor-pais">
+                        <select id="input-pais-matricula">
+                            <option value="PT">PT</option>
+                            <option value="ES">ES</option>
+                            <option value="FR">FR</option>
+                        </select>
+                        <span class="seta-seletor">v</span>
+                    </div>
+                    <input type="text" id="input-matricula" placeholder="Matrícula da viatura" required>
+                </div>
+
+                <div class="popup-grupo">
+                    <input type="text" id="input-alcunha" placeholder="Alcunha (opcional)">
+                </div>
+
+                <div class="cartao-ve">
+                    <div class="cartao-ve-info">
+                        <span class="icone-tomada">🔌</span>
+                        <label for="switch-ve">Este é um veículo elétrico (VE)</label>
+                    </div>
+                    <label class="switch-container">
+                        <input type="checkbox" id="switch-ve">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+
+                <div class="popup-acoes">
+                    <button type="submit" class="btn-submeter-veiculo">
+                        + Adicionar Veículo
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

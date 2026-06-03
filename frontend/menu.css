@@ -1,0 +1,339 @@
+/* Reset básico para limpar estilos do browser */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #2F2F2F; /* Fundo escuro atrás do modal */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Contentor Principal do Modal */
+.modal-container {
+    background-color: #D2D7C4; /* Cor verde-cinza do teu fundo */
+    border-radius: 12px;
+    padding: 35px;
+    width: 800px;
+    position: relative;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Botão Fechar (O X no canto superior direito) */
+.btn-fechar {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    background: none;
+    border: none;
+    font-size: 32px;
+    color: #4A4A4A;
+    cursor: pointer;
+}
+
+/* Cabeçalho do Perfil */
+.perfil-topo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.avatar-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1A1A1A;
+}
+
+.perfil-topo h2 {
+    font-size: 24px;
+    color: #1A1A1A;
+    font-weight: 500;
+}
+
+/* ALINHAMENTO EM COLUNAS LADO A LADO */
+.modal-corpo {
+    display: flex;
+    gap: 35px;
+    align-items: flex-start;
+}
+
+/* Menu Lateral */
+.menu-lateral {
+    display: flex;
+    flex-direction: column;
+    background-color: #B2BC9B; /* Verde do fundo do menu */
+    border-radius: 8px;
+    padding: 12px;
+    width: 190px;
+    gap: 6px;
+}
+
+.btn-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 12px 15px;
+    color: #FFFFFF;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.btn-menu:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-menu.active {
+    background-color: #6C7A53; /* Verde escuro do botão ativo */
+    color: #D2D7C4;
+    font-weight: bold;
+}
+
+/* Coluna Direita do Conteúdo */
+.conteudo-central {
+    flex: 1;
+}
+
+.aba-titulo h3 {
+    color: #3D4A26;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* Formulário e Inputs */
+.form-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-linha {
+    display: flex;
+    gap: 25px;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 8px;
+}
+
+.form-grupo.m-metade {
+    flex: 0 0 calc(50% - 12.5px);
+}
+
+.form-grupo label {
+    font-size: 16px;
+    color: #1A1A1A;
+    font-weight: 500;
+}
+
+.form-grupo input {
+    background-color: #F1F3EE;
+    border: none;
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 15px;
+    color: #333333;
+    outline: none;
+}
+
+/* Caixas brancas das abas Garagem e Atividade */
+.caixa-historico {
+    background-color: #FFFFFF;
+    border: 1.5px solid #6C7A53;
+    border-radius: 12px;
+    min-height: 250px;
+    padding: 20px;
+}
+
+/* Botões da base */
+.form-acoes, .form-acoes-garagem {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.btn-acao {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.btn-editar { background-color: #6C7A53; }
+.btn-eliminar { background-color: #BD4B4B; }
+.btn-add-veiculo {
+    background-color: #FFFFFF;
+    color: #4A4A4A;
+    border: 1px solid #B2BC9B;
+}
+
+/* STYLES DO POP-UP (ADICIONAR VEÍCULO) */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none; /* Controlado pelo script.js */
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.popup-container {
+    background-color: #92A175;
+    border-radius: 12px;
+    padding: 30px;
+    width: 420px;
+    position: relative;
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.popup-fechar {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #2F3E1B;
+    cursor: pointer;
+}
+
+.popup-topo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    color: #2F3E1B;
+}
+
+.popup-linha-matricula {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.seletor-pais {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.seletor-pais select {
+    background-color: #F1F3EE;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 12px 30px 12px 15px;
+    font-size: 15px;
+    cursor: pointer;
+    appearance: none;
+    outline: none;
+}
+
+.seta-seletor {
+    position: absolute;
+    right: 12px;
+    font-size: 11px;
+    pointer-events: none;
+}
+
+.popup-container input[type="text"] {
+    width: 100%;
+    background-color: #F1F3EE;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 15px;
+    font-size: 15px;
+    outline: none;
+}
+
+.popup-grupo {
+    margin-bottom: 15px;
+}
+
+.cartao-ve {
+    background-color: #B4C0A0;
+    border: 1px solid #829165;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.cartao-ve-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #2F3E1B;
+    font-size: 14px;
+}
+
+/* Switch toggle */
+.switch-container {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.switch-container input { opacity: 0; width: 0; height: 0; }
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #92A175;
+    border: 1px solid #718155;
+    transition: .3s;
+    border-radius: 24px;
+}
+
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px; bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+input:checked + .switch-slider { background-color: #2F3E1B; }
+input:checked + .switch-slider:before { transform: translateX(20px); }
+
+.btn-submeter-veiculo {
+    background-color: #FFFFFF;
+    color: #4A4A4A;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-weight: bold;
+    cursor: pointer;
+}

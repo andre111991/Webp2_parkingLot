@@ -1,0 +1,61 @@
+/* contactos.css */
+
+.contactos-container {
+    height: 80vh; /* Ocupa grande parte da altura do ecrã para centralizar o conteúdo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.contactos-content {
+    max-width: 600px;
+}
+
+.contactos-content h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 80px; /* Tamanho grande conforme o destaque da imagem */
+    font-weight: 400;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+.contactos-content p {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 50px;
+    padding: 0 20px;
+}
+
+.btn-linha-apoio {
+    display: inline-block;
+    background-color: #4a5d1b; /* O verde oliva escuro das tuas imagens */
+    color: white;
+    text-decoration: none;
+    padding: 25px 60px;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 50px; /* Botão totalmente arredondado (pill shape) */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-linha-apoio:hover {
+    background-color: #3a4a15;
+    transform: translateY(-2px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .contactos-content h1 {
+        font-size: 50px;
+    }
+    
+    .btn-linha-apoio {
+        padding: 20px 40px;
+        width: 100%;
+    }
+}
