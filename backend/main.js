@@ -1,8 +1,16 @@
 import express from "express";
 import cookieParser from 'cookie-parser'; // Middleware para lidar com cookies
+import cors from "cors"; // 1. ADICIONADO: Importar o pacote CORS
 import 'dotenv/config';
 
 const app = express();
+
+// Altera de: app.use(cors());
+// Para:
+app.use(cors({
+    origin: "http://127.0.0.1:5500", // O URL exato que aparece no teu Live Server
+    credentials: true                // Permite a troca de cookies/tokens entre o front e o back
+}));
 app.use(express.json());
 app.use(cookieParser()); //coloca o resultado dentro do objeto req.cookies
 
