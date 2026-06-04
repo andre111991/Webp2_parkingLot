@@ -15,28 +15,4 @@ router.delete("/admin/cancelar/:id_reserva", verificarToken, verificarAdmin, can
 router.patch("/admin/:id_reserva/pagar", verificarToken, verificarAdmin, marcarComoPago);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export default router;

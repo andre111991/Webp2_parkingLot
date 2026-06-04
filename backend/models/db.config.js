@@ -82,7 +82,7 @@ try {
             { name: 'Admin1', email: 'admin1@admin.com', password: passwordHash, tipo_utilizador: 'admin' },
             { name: 'Admin2', email: 'admin2@admin.com', password: passwordHash, tipo_utilizador: 'admin' }
         ]);
-        console.log("Admin users created successfully!");
+        console.log("Admins criados com sucesso!");
     }
 
   const vagaCount = await Vaga.count();
