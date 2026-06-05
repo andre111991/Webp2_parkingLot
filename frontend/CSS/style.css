@@ -179,3 +179,27 @@ nav {
     border-radius: 50px;
     font-size: 12px;
 }
+
+/* 1. O dropdown começa invisível */
+.profile-dropdown {
+    display: none; 
+    position: absolute;
+    top: 100%; /* Ajusta para aparecer logo abaixo do ícone */
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000; /* Garante que fica por cima de tudo */
+}
+
+/* 2. Classe que o JavaScript vai adicionar ao clicar */
+.profile-dropdown.active {
+    display: block; 
+}
+
+/* Ajuste opcional para o trigger ser clicável */
+#profile-menu-trigger {
+    cursor: pointer;
+    position: relative; /* Importante para o dropdown se posicionar corretamente */
+}

@@ -1,4 +1,3 @@
-// 🌟 CONFIGURAÇÃO INICIAL
 const API_BASE_URL = "http://localhost:3000";
 
 function obterHeaders() {
@@ -9,119 +8,327 @@ function obterHeaders() {
     };
 }
 
-// 🌟 ESCUTA O FORMULÁRIO DE REGISTO
-const formRegisto = document.getElementById('formRegisto'); 
-if (formRegisto) {
-    formRegisto.addEventListener('submit', function(e) {
-        e.preventDefault(); // Trava o erro 405
-
-        // Apanha os dados dos inputs REAIS do teu registar.html
-        const dadosFormulario = {
-            name: document.getElementById('reg-nome').value,
-            email: document.getElementById('reg-email').value,
-            password: document.getElementById('reg-pass').value
-        };
-
-     fetch(`${API_BASE_URL}/utilizadores/registo`, {  // 🌟 Corrigido para /utilizadores/registo
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-        body: JSON.stringify(dadosFormulario)
-    })
-        .then(resposta => resposta.json())
-        .then(resultado => {
-            console.log("Resposta do servidor:", resultado);
-            alert("Registo feito com sucesso!");
-            window.location.href = "login.html"; // Redireciona após sucesso
-        })
-        .catch(erro => {
-            console.error("Erro na ligação ao back-end:", erro);
-            alert("Erro ao efetuar o registo.");
-        });
-    });
-}
-
-// 🌟 ESCUTA O FORMULÁRIO DE LOGIN (PRONTO PARA USAR)
-const formLogin = document.getElementById('formLogin');
-if (formLogin) {
-    formLogin.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const dadosLogin = {
-            email: document.getElementById('login-email').value,
-            password: document.getElementById('login-pass').value
-        };
-
- fetch(`${API_BASE_URL}/utilizadores/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include', // 🌟 ESSENCIAL para o browser aceitar o cookie 'refreshToken' do teu backend
-    body: JSON.stringify(dadosLogin)
-})
-        .then(res => {
-            if (!res.ok) throw new Error("Credenciais inválidas");
-            return res.json();
-        })
-        .then(data => {
-            // Se o teu backend devolver um token, guardamo-lo aqui:
-            if (data.token) localStorage.setItem("token", data.token);
-            
-            alert("Login efetuado com sucesso!");
-            window.location.href = "vagas.html"; // Altera para a tua página principal (ex: index.html ou vagas.html)
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Erro no login: Verifica os teus dados.");
-        });
-    });
-}
-
-// 🌟 PROTEÇÃO DE ROTAS (CORRIGIDO PARA NÃO DAR LOOP)
 document.addEventListener("DOMContentLoaded", () => {
+    
+    // --- 1. FORMULÁRIO DE REGISTO ---
+    const formRegisto = document.getElementById('formRegisto'); 
+    if (formRegisto) {
+        formRegisto.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            const password = document.getElementById('reg-pass').value;
+            const regexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            if (!regexPassword.test(password)) {
+                alert("A password deve conter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial.");
+                return;
+            }
+
+            const dadosFormulario = {
+                name: document.getElementById('reg-nome').value,
+                email: document.getElementById('reg-email').value,
+                password: password
+            };
+
+            try {
+                const resposta = await fetch(`${API_BASE_URL}/utilizadores/registo`, {  
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosFormulario)
+                });
+
+                if (!resposta.ok) {
+                    const err = await resposta.json();
+                    throw new Error(err.message || "Erro no registo.");
+                }
+                
+                alert("Registo feito com sucesso!");
+                window.location.href = "login.html"; 
+            } catch (erro) {
+                alert(erro.message); 
+            }
+        });
+    }
+
+    // --- 2. FORMULÁRIO DE LOGIN ---
+    const formLogin = document.getElementById('formLogin');
+    if (formLogin) {
+        formLogin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const dadosLogin = {
+                email: document.getElementById('login-email').value,
+                password: document.getElementById('login-pass').value
+            };
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/utilizadores/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosLogin)
+                });
+
+                if (!res.ok) throw new Error("Credenciais inválidas");
+                
+                const data = await res.json();
+                if (data.token) localStorage.setItem("token", data.token);
+                
+                alert("Login efetuado com sucesso!");
+                window.location.href = "vagas.html"; 
+            } catch (err) {
+                alert("Erro no login: Verifica os teus dados.");
+            }
+        });
+    }
+
+    // --- 3. PROTEÇÃO DE ROTAS E FUNCIONALIDADES ---
+    const paginaAtual = window.location.pathname;
+    
+    // Se não estivermos na página de login ou registo, verificar token
+    if (!paginaAtual.includes("login.html") && !paginaAtual.includes("registar.html")) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        // Funções para páginas protegidas
+        inicializarApp();
+        setupEventosInterface();
+    }
+});
+
+// ==========================================
+// 🌟 FUNÇÕES AUXILIARES E DE INTERFACE
+// ==========================================
+
+async function inicializarApp() {
+    try {
+        const resposta = await fetch(`${API_BASE_URL}/utilizadores/me`, {
+            method: "GET",
+            headers: obterHeaders()
+        });
+        if (resposta.ok) {
+            const user = await resposta.json();
+            const nomeUtilizador = user.name || user.nome;
+            const elNomes = ["user-nav-name", ".profile-name", "user-display-name"];
+            elNomes.forEach(id => {
+                const el = document.querySelector(id.startsWith('.') ? id : `#${id}`);
+                if (el) el.innerText = nomeUtilizador;
+            });
+        }
+    } catch (erro) { console.error("Erro na Navbar:", erro); }
+}
+
+function injetarMenu() {
+    const container = document.getElementById('menu-container');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="logo">SmartVaga</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="vagas.html">Vagas</a></li>
+            <li><a href="carregamentos.html">Carregamentos</a></li>
+            <li><a href="contactos.html">Contactos</a></li>
+        </ul>
+        <div class="user-profile" id="profile-menu-trigger">
+            <svg class="profile-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
+            <span class="profile-name" id="user-nav-name">Maria</span>
+            <div class="profile-dropdown" id="my-profile-dropdown">
+                <a href="#">📝 Editar Perfil</a>
+                <hr>
+                <a href="#" class="logout-item" id="btn-logout">❌ Terminar Sessão</a>
+            </div>
+        </div>
+    `;
+}
+
+function setupEventosInterface() {
+    const btnAbrirPerfil = document.getElementById("abrir-modal-perfil");
+    const overlayPerfil = document.getElementById("overlay-modal-perfil");
+    const btnFecharPerfil = document.getElementById("btn-fechar-modal");
+
+    if (btnAbrirPerfil && overlayPerfil) {
+        btnAbrirPerfil.addEventListener("click", (e) => {
+            e.preventDefault();
+            overlayPerfil.style.display = "flex";
+            mudarConteudoAba("perfil"); 
+        });
+    }
+
+    if (btnFecharPerfil && overlayPerfil) {
+        btnFecharPerfil.addEventListener("click", () => overlayPerfil.style.display = "none");
+    }
+    
+    // Logout
+    const btnLogout = document.getElementById("btn-logout");
+    if (btnLogout) {
+        btnLogout.addEventListener("click", () => {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        });
+    }
+}
+
+async function repreencherCamposPerfil() {
+    try {
+        // 🔄 Atualizado de /utilizadores/perfil para /utilizadores/me
+        const resposta = await fetch(`${API_BASE_URL}/utilizadores/me`, { headers: obterHeaders() });
+        if (resposta.ok) {
+            const user = await resposta.json();
+            const nomeUtilizador = user.name || user.nome;
+            
+            if (document.getElementById("input-nome")) {
+                document.getElementById("input-nome").value = nomeUtilizador;
+                document.getElementById("input-email").value = user.email;
+            }
+        } else {
+            console.error(`Erro ao carregar perfil: Status ${resposta.status}`);
+        }
+    } catch (err) { 
+        console.error("Erro na ligação ao carregar perfil:", err); 
+    }
+}
+
+// 4. GESTOR DINÂMICO DE CONTEÚDO
+function mudarConteudoAba(aba) {
+    const zonaConteudo = document.getElementById("zona-conteudo");
+    if (!zonaConteudo) return;
+
+    if (aba === "perfil") {
+        zonaConteudo.innerHTML = `
+            <div class="aba-titulo"><h3>📝 Editar Perfil</h3></div>
+            <form class="form-perfil" id="form-editar-perfil">
+                <div class="form-linha">
+                    <div class="form-grupo"><label>Nome</label><input type="text" id="input-nome" placeholder="O teu nome"></div>
+                    <div class="form-grupo"><label>Email</label><input type="email" id="input-email" placeholder="maria@esmad.ipp.pt"></div>
+                </div>
+                <div class="form-linha">
+                    <div class="form-grupo m-metade"><label>Nova Password</label><input type="password" id="input-password" placeholder="••••••••••••"></div>
+                </div>
+                <div class="form-acoes" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="submit" class="btn-acao btn-editar" style="background-color: #5b6b47; color: white;">📝 Editar</button>
+                    <button type="button" class="btn-acao btn-eliminar" id="btn-eliminar-conta" style="background-color: #bd4b4b; color: white;">🗑️ Eliminar conta</button>
+                </div>
+            </form>
+        `;
+        const formEditar = document.getElementById("form-editar-perfil");
+        if (formEditar) {
+            formEditar.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                await guardarPerfil(); // Função que cria o fetch de POST/PUT
+            });
+        }
+        repreencherCamposPerfil();
+    }
+    else if (aba === "atividade") {
+        zonaConteudo.innerHTML = `
+            <div class="aba-titulo">
+                <h3 style="color: #4b5e30; display: flex; align-items: center; gap: 8px;">
+                    <span>🕒</span> Atividade
+                </h3>
+            </div>
+            <div class="caixa-historico">
+                <p class="texto-vazio" style="margin: 0; color: #111;">Sem histórico de atividade</p>
+            </div>
+        `;
+    }
+    else if (aba === "garagem") {
+        zonaConteudo.innerHTML = `
+            <div class="aba-titulo">
+                <h3 style="color: #4b5e30; display: flex; align-items: center; gap: 8px;">
+                    <span>🚗</span> Garagem
+                </h3>
+            </div>
+            <div class="caixa-historico" id="lista-veiculos">
+                <p class="texto-vazio" style="margin: 0;">A carregar veículos...</p>
+            </div>
+            <div class="form-acoes-garagem" style="display: flex; justify-content: flex-end; margin-top: 15px;">
+                <button type="button" class="btn-acao btn-add-veiculo" id="btn-abrir-add-veiculo">+ Adicionar Veículo</button>
+            </div>
+        `;
+
+        // carregarVeiculosGaragem(); // Descomentar se a função for necessária
+
+        const btnAbrirAdd = document.getElementById("btn-abrir-add-veiculo");
+        if (btnAbrirAdd) {
+            btnAbrirAdd.addEventListener("click", () => {
+                const overlayAdd = document.getElementById("overlay-add-veiculo");
+                if (overlayAdd) overlayAdd.style.display = "flex";
+            });
+        }
+    } else {
+        zonaConteudo.innerHTML = `
+            <div class="aba-titulo"><h3>💳 Pagamento</h3></div>
+            <div class="caixa-historico"><p class="texto-vazio">Em desenvolvimento...</p></div>
+        `;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Injeta primeiro o HTML
+    injetarMenu(); 
+
+document.addEventListener("click", (e) => {
+    // 1. Verifica se clicaste no trigger do perfil
+    const trigger = e.target.closest("#profile-menu-trigger");
+    const dropdown = document.getElementById("my-profile-dropdown");
+
+    if (trigger) {
+        // Se clicaste no botão, alterna a classe
+        e.preventDefault();
+        if (dropdown) {
+            dropdown.classList.toggle("active");
+        }
+    } else if (dropdown && !e.target.closest(".profile-dropdown")) {
+        // Se clicaste fora do menu, fecha-o
+        dropdown.classList.remove("active");
+    }
+});
+
     const paginaAtual = window.location.pathname;
 
-    // Se o utilizador estiver no login ou registo, NÃO corre a validação de Token
     if (paginaAtual.includes("login.html") || paginaAtual.includes("registar.html")) {
         return; 
     }
 
-    // Se estiver em qualquer outra página (ex: index.html, vagas.html) obriga a ter Token
     const token = localStorage.getItem("token");
     if (!token) {
         window.location.href = "login.html";
         return;
     }
 
-    // 1. CARREGAR NOME LOGADO LOGO NO INÍCIO
+    // Carregar nome do utilizador na Navbar
     async function inicializarApp() {
         try {
-            const resposta = await fetch(`${API_BASE_URL}/utilizadores/perfil`, {
+            // 🔄 Atualizado de /utilizadores/perfil para /utilizadores/me
+            const resposta = await fetch(`${API_BASE_URL}/utilizadores/me`, {
                 method: "GET",
                 headers: obterHeaders()
             });
             if (resposta.ok) {
                 const user = await resposta.json();
-                if (document.getElementById("user-nav-name")) {
-                    document.getElementById("user-nav-name").innerText = user.nome;
-                }
-                if (document.getElementById("user-display-name")) {
-                    document.getElementById("user-display-name").innerText = user.nome;
-                }
+                const nomeUtilizador = user.name || user.nome;
+
+                if (document.getElementById("user-nav-name")) document.getElementById("user-nav-name").innerText = nomeUtilizador;
+                if (document.querySelector(".profile-name")) document.querySelector(".profile-name").innerText = nomeUtilizador;
+                if (document.getElementById("user-display-name")) document.getElementById("user-display-name").innerText = nomeUtilizador;
             }
         } catch (erro) {
-            console.error("Erro ao ir buscar dados iniciais:", erro);
+            console.error("Erro ao ir buscar dados iniciais da Navbar:", erro);
         }
     }
     inicializarApp();
 
-    // 2. CONTROLO DE ABERTURA/FECHO DO MODAL DE PERFIL
+    // Controlo de abertura e fecho do Modal Principal
     const overlayPerfil = document.getElementById("overlay-modal-perfil");
     const btnAbrirPerfil = document.getElementById("abrir-modal-perfil");
-    const btnFecharPerfil = document.getElementById("btn-fechar-modal-perfil");
+    const btnFecharPerfil = document.getElementById("btn-fechar-modal");
 
     if (btnAbrirPerfil && overlayPerfil) {
-        btnAbrirPerfil.addEventListener("click", () => {
+        btnAbrirPerfil.addEventListener("click", (e) => {
+            e.preventDefault();
             overlayPerfil.style.display = "flex";
             mudarConteudoAba("perfil"); 
         });
@@ -133,93 +340,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 3. NAVEGAÇÃO ENTRE ABAS DO MENU
-    const botoesMenu = document.querySelectorAll("#menu-perfil .btn-menu");
-    botoesMenu.forEach(botao => {
-        botao.addEventListener("click", () => {
+    // Escuta cliques nos botões do menu lateral
+    document.addEventListener("click", (e) => {
+        const botao = e.target.closest("#menu-perfil .btn-menu");
+        if (botao) {
+            const botoesMenu = document.querySelectorAll("#menu-perfil .btn-menu");
             botoesMenu.forEach(b => b.classList.remove("active"));
             botao.classList.add("active");
             mudarConteudoAba(botao.getAttribute("data-aba"));
-        });
+        }
     });
 
-    // 4. GESTOR DINÂMICO DE CONTEÚDO
-    function mudarConteudoAba(aba) {
-        const zonaConteudo = document.getElementById("zona-conteudo");
-        if (!zonaConteudo) return;
-
-        if (aba === "perfil") {
-            zonaConteudo.innerHTML = `
-                <div class="aba-titulo"><h3>📝 Editar Perfil</h3></div>
-                <form class="form-perfil" id="form-editar-perfil">
-                    <div class="form-linha">
-                        <div class="form-grupo"><label>Nome</label><input type="text" id="input-nome"></div>
-                        <div class="form-grupo"><label>Email</label><input type="email" id="input-email"></div>
-                    </div>
-                    <div class="form-acoes">
-                        <button type="submit" class="btn-acao btn-editar">📝 Editar</button>
-                    </div>
-                </form>
-            `;
-            repreencherCamposPerfil();
-        }
-        else if (aba === "garagem") {
-            zonaConteudo.innerHTML = `
-                <div class="aba-titulo"><h3>🚗 Garagem</h3></div>
-                <div class="caixa-historico" id="lista-veiculos">A carregar veículos...</div>
-                <div class="form-acoes-garagem">
-                    <button type="button" class="btn-acao btn-add-veiculo" id="btn-abrir-add-veiculo">+ Adicionar Veículo</button>
-                </div>
-            `;
-            carregarVeiculosGaragem();
-
-            const btnAbrirAdd = document.getElementById("btn-abrir-add-veiculo");
-            if (btnAbrirAdd) {
-                btnAbrirAdd.addEventListener("click", () => {
-                    const overlayAdd = document.getElementById("overlay-add-veiculo");
-                    if (overlayAdd) overlayAdd.style.display = "flex";
-                });
-            }
-        }
-    }
-
-    // 5. FUNÇÕES DE ACESSO À VOSSA API REAL DO BACKEND
-    async function repreencherCamposPerfil() {
-        try {
-            const resposta = await fetch(`${API_BASE_URL}/utilizadores/perfil`, { headers: obterHeaders() });
-            if (resposta.ok) {
-                const user = await resposta.json();
-                if (document.getElementById("input-nome")) {
-                    document.getElementById("input-nome").value = user.nome;
-                    document.getElementById("input-email").value = user.email;
-                }
-            }
-        } catch (err) { console.error(err); }
-    }
-
-    async function carregarVeiculosGaragem() {
-        const lista = document.getElementById("lista-veiculos");
-        if (!lista) return;
-        try {
-            const res = await fetch(`${API_BASE_URL}/veiculos`, { headers: obterHeaders() });
-            const carros = await res.json();
-            if (!carros || carros.length === 0) {
-                lista.innerHTML = `<p class="texto-vazio">Sem veículos na garagem</p>`;
-                return;
-            }
-            lista.innerHTML = "";
-            carros.forEach(carro => {
-                lista.innerHTML += `
-                    <div class="item-veiculo" style="padding:10px; border-bottom:1px solid #eee; color:#000;">
-                        <p><strong>[${carro.pais || 'PT'}] ${carro.matricula}</strong> - ${carro.alcunha}</p>
-                    </div>`;
-            });
-        } catch (e) {
-            lista.innerHTML = "Erro ao carregar.";
-        }
-    }
-
-    // Configuração do fecho do pop-up verde
+    // Fechar Popup de adicionar veículo
     const btnFecharPopup = document.getElementById("btn-fechar-popup");
     if (btnFecharPopup) {
         btnFecharPopup.addEventListener("click", () => {
@@ -227,4 +359,86 @@ document.addEventListener("DOMContentLoaded", () => {
             if (overlayAdd) overlayAdd.style.display = "none";
         });
     }
+
+    // Botão Terminar Sessão
+    const btnLogout = document.getElementById("btn-logout");
+    if (btnLogout) {
+        btnLogout.addEventListener("click", (e) => {
+            e.preventDefault();
+            localStorage.removeItem("token");
+            alert("Sessão terminada!");
+            window.location.href = "login.html";
+        });
+    }
+
+    // --- LÓGICA PARA ADICIONAR VEÍCULO ---
+    const formAddVeiculo = document.getElementById("form-add-veiculo");
+    if (formAddVeiculo) {
+        formAddVeiculo.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const novoVeiculo = {
+                pais: document.getElementById("input-pais-matricula").value,
+                matricula: document.getElementById("input-matricula").value,
+                alcunha: document.getElementById("input-alcunha").value,
+                eEletrico: document.getElementById("switch-ve").checked // true ou false
+            };
+
+            try {
+                const resposta = await fetch(`${API_BASE_URL}/veiculos`, {
+                    method: "POST",
+                    headers: {
+                        ...obterHeaders(), // Garante que o token é enviado
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(novoVeiculo)
+                });
+
+                if (resposta.ok) {
+                    alert("Veículo adicionado com sucesso!");
+                    document.getElementById("overlay-add-veiculo").style.display = "none";
+                    formAddVeiculo.reset(); // Limpa o formulário
+                    
+                    // Se estivermos na aba da garagem, recarrega a lista
+                    if (typeof carregarVeiculosGaragem === 'function') {
+                        carregarVeiculosGaragem();
+                    }
+                } else {
+                    const erro = await resposta.json();
+                    alert("Erro ao adicionar: " + (erro.message || "Tenta novamente"));
+                }
+            } catch (err) {
+                console.error("Erro na rede:", err);
+                alert("Erro de ligação ao servidor.");
+            }
+        });
+    }
+});
+
+
+window.ativarAbaLateral = function(aba) {
+    const overlayPerfil = document.getElementById("overlay-modal-perfil");
+    if (overlayPerfil) {
+        overlayPerfil.style.display = "flex";
+        mudarConteudoAba(aba);
+        
+        setTimeout(() => {
+            const botoesMenu = document.querySelectorAll("#menu-perfil .btn-menu");
+            botoesMenu.forEach(b => {
+                if (b.getAttribute("data-aba") === aba) b.classList.add("active");
+                else b.classList.remove("active");
+            });
+        }, 50);
+    }
+};
+
+window.alternarMenuDropdown = function(evento) {
+    if (evento) evento.stopPropagation();
+    const dropdown = document.getElementById("my-profile-dropdown");
+    if (dropdown) dropdown.classList.toggle("active");
+};
+
+document.addEventListener("click", () => {
+    const dropdown = document.getElementById("my-profile-dropdown");
+    if (dropdown) dropdown.classList.remove("active");
 });
