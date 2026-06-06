@@ -26,9 +26,16 @@ export const getMeusVeiculos = async (req, res, next) => {
             where: { id_utilizador: req.user.id }
         });
 
+        // Verificação: Se a lista estiver vazia, retorna a mensagem
+        if (!meusVeiculos || meusVeiculos.length === 0) {
+            return res.status(200).json({ 
+                message: "Não tens nenhum veículo registado na tua conta." 
+            });
+        }
+
         res.status(200).json(meusVeiculos);
     } catch (error) {
-        next(genericError());
+        next(error); // Recomendo passares o erro real para o logger, em vez de genericError()
     }
 };
 
@@ -80,6 +87,13 @@ export const deleteVeiculo = async (req, res, next) => {
 export const getAllVeiculos = async (req, res, next) => {
     try {
         const veiculos = await Veiculo.findAll();
+
+        // Verificação: Se a lista estiver vazia, retorna a mensagem
+        if (!veiculos || veiculos.length === 0) {
+            return res.status(200).json({ 
+                message: "Não existem veículos adicionados ao sistema." 
+            });
+        }
 
         // Agrupar por id_utilizador
         const agrupado = veiculos.reduce((acc, v) => {

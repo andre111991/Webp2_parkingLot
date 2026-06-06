@@ -153,11 +153,6 @@ export const cancelarReservaAdmin = async (req, res, next) => {
     try {
         const { id_reserva } = req.params;
 
-        // 1. Validar se quem faz o pedido é Admin
-        if (req.user.role !== 'admin') {
-            return next(validationError({ message: "Acesso negado. Apenas administradores podem cancelar reservas." }));
-        }
-
         // 2. Encontrar a reserva
         const reserva = await Reserva.findByPk(id_reserva);
         if (!reserva) {

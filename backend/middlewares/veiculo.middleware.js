@@ -1,5 +1,5 @@
 import { validationError,notFoundError,forbiddenError} from '../utils/error.utils.js';
-import { Veiculo } from '../models/db.config.js';
+import { Veiculo,Reserva,Carregamento } from '../models/db.config.js';
 
 // 1. Validação do input 
 export const validarVeiculoInput = (req, res, next) => {
@@ -38,3 +38,28 @@ export const verificarDonoVeiculo = async (req, res, next) => {
     }
 };
 
+export const verificarDependenciasExclusao = async (req, res, next) => {
+    try {
+        const { id } = req.params; // Assumindo que o ID do veículo vem no parâmetro da rota
+
+        // 1. Verifica se existem Reservas associadas ao veículo
+        const reservaExistente = await Reserva.findOne({ where: { id_veiculo: id } });
+        if (reservaExistente) {
+            return next(validationError({ 
+                message: "Não é possível apagar este veículo. Existe uma reserva associada. Por favor, apague a reserva primeiro." 
+            }));
+        }
+
+        // 2. Verifica se existem Carregamentos associados ao veículo
+        const carregamentoExistente = await Carregamento.findOne({ where: { id_veiculo: id } });
+        if (carregamentoExistente) {
+            return next(validationError({ 
+                message: "Não é possível apagar este veículo. Existe um carregamento associado. Por favor, apague o carregamento primeiro." 
+            }));
+        }
+
+        next(); // Se não existir nada, prossegue para o controlador de delete
+    } catch (error) {
+        next(error);
+    }
+};

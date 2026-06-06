@@ -5,6 +5,8 @@ import { verificarToken,verificarAdmin} from "../middlewares/auth.middleware.js"
 
 const router = express.Router();
 
+// aqui o :id é o id da vaga
+
 // 1. Listar vagas
 router.get("/", verificarToken, getAllVagas);
 router.get("/:id", verificarToken, getVagaById);
