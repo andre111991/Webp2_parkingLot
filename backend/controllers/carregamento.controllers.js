@@ -1,9 +1,6 @@
 import { Carregamento, Veiculo, Vaga } from '../models/db.config.js';
 import { notFoundError, validationError } from '../utils/error.utils.js';
 
-import { Carregamento, Veiculo, Vaga } from '../models/db.config.js';
-import { notFoundError, validationError } from '../utils/error.utils.js';
-
 export const iniciarCarregamento = async (req, res, next) => {
     try {
         const { id_veiculo, id_vaga, data_hora_inicio, data_hora_fim } = req.body;
@@ -53,3 +50,70 @@ export const iniciarCarregamento = async (req, res, next) => {
         next(error);
     }
 };
+
+//.................................admin..................................
+
+
+export const getCarregamentosAdmin = async (req, res, next) => {
+    try {
+        // Busca todos os carregamentos existentes na base de dados
+        const todosCarregamentos = await Carregamento.findAll({
+            include: [
+                { 
+                    model: Veiculo, 
+                    attributes: ['matricula', 'tipo_combustivel'] 
+                },
+                { 
+                    model: Vaga, 
+                    attributes: ['letra', 'andar', 'tipo'] 
+                }
+            ],
+            order: [['data_hora_inicio', 'DESC']] // Mostra os mais recentes primeiro
+        });
+
+        if (todosCarregamentos.length === 0) {
+            return res.status(200).json({ 
+                message: "Ainda não existem carregamentos registados no sistema." 
+            });
+        }
+
+        res.status(200).json(todosCarregamentos);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+export const cancelarCarregamentoAdmin = async (req, res, next) => {
+    try {
+        const { id_carregamento } = req.params;
+
+        // 1. Encontrar o carregamento
+        const carregamento = await Carregamento.findByPk(id_carregamento);
+        if (!carregamento) {
+            return next(notFoundError("Carregamento"));
+        }
+
+        // 2. Encontrar a vaga associada para a libertar
+        const vaga = await Vaga.findByPk(carregamento.id_vaga);
+        if (vaga) {
+            // Liberta a vaga (volta para estado 0)
+            await vaga.update({ estado: 0 });
+        }
+
+        // 3. Forçar o cancelamento (Apagar o registo)
+        await carregamento.destroy();
+
+        res.status(200).json({ 
+            message: "Carregamento cancelado com sucesso e vaga libertada." 
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+
+
