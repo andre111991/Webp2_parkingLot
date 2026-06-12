@@ -7,9 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="../CSS/contactos.css">
+    <link rel="stylesheet" href="../CSS/menu.css">
 </head>
 <body>
-<nav id="menu-container"></nav>
+<nav>
+        <div id="menu-container" style="width: 100%;"></div>
+    </nav>
 
     <main class="contactos-container">
         <section class="contactos-content">
@@ -21,6 +24,35 @@
             </a>
         </section>
     </main>
+
+    <div class="modal-overlay" id="overlay-modal-perfil" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 998; justify-content: center; align-items: center;">
+    <div class="modal-container">
+        <button type="button" class="btn-fechar" id="btn-fechar-modal">&times;</button>
+        
+        <div class="perfil-topo">
+            <div class="avatar-icone">
+                <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <h2 id="user-display-name">Nome</h2>
+        </div>
+
+        <div class="modal-corpo">
+            <nav class="menu-lateral" id="menu-perfil">
+                <button type="button" class="btn-menu active" data-aba="perfil">📝 Editar Perfil</button>
+                <button type="button" class="btn-menu" data-aba="atividade">🕒 Atividade</button>
+                <button type="button" class="btn-menu" data-aba="garagem">🚗 Garagem</button>
+                <button type="button" class="btn-menu" data-aba="pagamento">💳 Pagamento</button>
+            </nav>
+
+            <div class="conteudo-central" id="zona-conteudo"></div>
+        </div>
+    </div>
+</div>
+
+<div class="popup-overlay" id="overlay-add-veiculo" style="display: none;"></div>
 <script src="../JS/script.js"></script>
 </body>
 </html>

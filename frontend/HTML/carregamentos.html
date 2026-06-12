@@ -12,13 +12,7 @@
 <body>
 
     <nav>
-       
-       <nav id="menu-container"></nav>
-        
-        <div class="user-profile" id="profile-menu-trigger" onclick="alternarMenuDropdown(event)">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-            
-        </div>
+        <div id="menu-container" style="width: 100%;"></div>
     </nav>
 
     <main class="pricing-container">
@@ -57,6 +51,36 @@
             </div>
         </section>
     </main>
+
+<div class="modal-overlay" id="overlay-modal-perfil" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 998; justify-content: center; align-items: center;">
+    <div class="modal-container">
+        <button type="button" class="btn-fechar" id="btn-fechar-modal">&times;</button>
+        
+        <div class="perfil-topo">
+            <div class="avatar-icone">
+                <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <h2 id="user-display-name">Nome</h2>
+        </div>
+
+        <div class="modal-corpo">
+            <nav class="menu-lateral" id="menu-perfil">
+                <button type="button" class="btn-menu active" data-aba="perfil">📝 Editar Perfil</button>
+                <button type="button" class="btn-menu" data-aba="atividade">🕒 Atividade</button>
+                <button type="button" class="btn-menu" data-aba="garagem">🚗 Garagem</button>
+                <button type="button" class="btn-menu" data-aba="pagamento">💳 Pagamento</button>
+            </nav>
+
+            <div class="conteudo-central" id="zona-conteudo"></div>
+        </div>
+    </div>
+</div>
+
+<div class="popup-overlay" id="overlay-add-veiculo" style="display: none;"></div>
+
 <script src="../JS/script.js"></script>
 </body>
 </html>
