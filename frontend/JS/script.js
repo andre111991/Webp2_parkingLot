@@ -16,13 +16,15 @@ async function carregarVeiculosGaragem() {
     if (!lista) return;
 
     try {
-        const resposta = await fetch(`${API_BASE_URL}/veiculos`, {
+        console.log("🔄 A carregar veículos para a interface da Garagem...");
+        const resposta = await fetch(`${API_BASE_URL}/veiculos/meu`, {
             method: "GET",
             headers: obterHeaders()
         });
 
         if (resposta.ok) {
             const veiculos = await resposta.json();
+            console.log("🚗 Veículos obtidos para a Garagem:", veiculos);
             
             if (veiculos.length === 0) {
                 lista.innerHTML = `<p class="texto-vazio" style="margin:0; color:#666;">A tua garagem está vazia. Adiciona o teu primeiro veículo!</p>`;
@@ -31,21 +33,20 @@ async function carregarVeiculosGaragem() {
 
             let htmlGeral = `<div style="display: flex; flex-direction: column; gap: 10px; max-height: 240px; overflow-y: auto;">`;
             veiculos.forEach(v => {
-                const tipoIcone = v.eEletrico ? "⚡ Elétrico" : "⛽ Combustão";
+                const badgeCombustivel = v.tipo_combustivel === "eletrico" ? "⚡ Elétrico" : "⛽ Combustão";
                 htmlGeral += `
                     <div class="item-veiculo" style="padding: 12px; background-color: #f4f6f2; border-left: 4px solid #5b6b47; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
                         <div>
-                            <strong style="color: #222; font-size: 15px;">${v.alcunha || "Sem Nome"}</strong>
-                            <span style="display: block; font-size: 12px; color: #666; margin-top: 2px;">Matrícula: ${v.matricula} (${v.pais})</span>
+                            <strong style="color: #222; font-size: 15px; letter-spacing: 1px;">${v.matricula.toUpperCase()}</strong>
                         </div>
-                        <span style="font-size: 12px; background: #e2e8f0; padding: 4px 8px; border-radius: 12px; color: #444; font-weight: 500;">${tipoIcone}</span>
+                        <span style="font-size: 12px; background: #e2e8f0; padding: 4px 8px; border-radius: 12px; color: #444; font-weight: 500;">${badgeCombustivel}</span>
                     </div>
                 `;
             });
             htmlGeral += `</div>`;
             lista.innerHTML = htmlGeral;
         } else {
-            lista.innerHTML = `<p class="texto-vazio" style="color: red;">Erro ao carregar veículos da base de dados.</p>`;
+            lista.innerHTML = `<p class="texto-vazio" style="color: red;">Erro ao carregar veículos (${resposta.status}).</p>`;
         }
     } catch (err) {
         console.error("Erro na Garagem:", err);
@@ -53,9 +54,52 @@ async function carregarVeiculosGaragem() {
     }
 }
 
+async function carregarVeiculosParaReserva() {
+    const selectElement = document.getElementById('reserva-veiculo');
+    if (!selectElement) return;
+
+    try {
+        console.log("🔄 A carregar veículos para o seletor de reservas...");
+        const resposta = await fetch(`${API_BASE_URL}/veiculos/meu`, {
+            method: "GET",
+            headers: obterHeaders()
+        });
+
+        if (resposta.ok) {
+            const veiculos = await resposta.json();
+            console.log("🚗 Veículos obtidos para as Reservas:", veiculos);
+
+            if (!veiculos || veiculos.length === 0) {
+                selectElement.innerHTML = '<option value="">Nenhum veículo na garagem</option>';
+                return;
+            }
+
+            selectElement.innerHTML = '<option value="">Escolhe um veículo</option>';
+            
+            veiculos.forEach(v => {
+                if (v.matricula) {
+                    const matriculaFormatada = v.matricula.toUpperCase();
+                    const tipoCombustivel = v.tipo_combustivel === "eletrico" ? "⚡ Elétrico" : "⛽ Combustão";
+                    
+                    const option = document.createElement("option");
+                    option.value = v.matricula;
+                    option.textContent = `${matriculaFormatada} (${tipoCombustivel})`;
+                    selectElement.appendChild(option);
+                }
+            });
+            console.log("✅ Dropdown de veículos de reserva preenchido!");
+        } else {
+            selectElement.innerHTML = `<option value="">Erro do servidor (${resposta.status})</option>`;
+        }
+    } catch (err) {
+        console.error("Falha no Fetch das reservas:", err);
+        selectElement.innerHTML = '<option value="">Erro crítico de ligação</option>';
+    }
+}
+
 
 // ==========================================
-// ⚡ EVENTO PRINCIPAL DOMContentLoaded (ÚNICO)
+// ⚡ EVENTO PRINCIPAL DOMContentLoaded
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     
@@ -143,37 +187,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 4. LÓGICA DA PÁGINA DE RESERVAS ---
     const selectVeiculo = document.getElementById('reserva-veiculo');
-    const btnEfetuarReserva = document.querySelector('.btn-efetuar-reserva');
-
     if (selectVeiculo) {
-        async function carregarVeiculosParaReserva() {
-            try {
-                const resposta = await fetch(`${API_BASE_URL}/veiculos`, {
-                    method: "GET",
-                    headers: obterHeaders()
-                });
-
-                if (resposta.ok) {
-                    const veiculos = await resposta.json();
-                    if (veiculos.length === 0) {
-                        selectVeiculo.innerHTML = '<option value="">Nenhum veículo registado</option>';
-                        return;
-                    }
-                    selectVeiculo.innerHTML = '<option value="">Escolhe um veículo</option>';
-                    veiculos.forEach(v => {
-                        const nomeExibicao = v.alcunha ? `${v.alcunha} (${v.matricula})` : v.matricula;
-                        selectVeiculo.innerHTML += `<option value="${nomeExibicao}">${nomeExibicao}</option>`;
-                    });
-                } else {
-                    selectVeiculo.innerHTML = '<option value="">Erro ao carregar veículos</option>';
-                }
-            } catch (err) {
-                selectVeiculo.innerHTML = '<option value="">Erro de ligação</option>';
-            }
-        }
         carregarVeiculosParaReserva();
     }
 
+    // FIX: Variável capturada corretamente para evitar quebras de execução no JS!
+    const btnEfetuarReserva = document.querySelector('.btn-efetuar-reserva');
     if (btnEfetuarReserva) {
         btnEfetuarReserva.addEventListener('click', () => {
             const veiculoEscolhido = document.getElementById('reserva-veiculo').value;
@@ -208,19 +227,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- 5. SUBMISSAO DO FORMULÁRIO DE ADICIONAR VEÍCULO ---
+    // Monitoriza o envio do formulário em vez do clique solto no botão para capturar o Enter também
     const formAddVeiculo = document.getElementById("form-add-veiculo");
     if (formAddVeiculo) {
         formAddVeiculo.addEventListener("submit", async (e) => {
             e.preventDefault();
+            console.log("🚀 Evento submit ativado no formulário do veículo!");
+
+            const inputMatricula = document.getElementById("input-matricula");
+            const switchVe = document.getElementById("switch-ve");
+
+            if (!inputMatricula) {
+                alert("Erro: Campo de matrícula não encontrado no HTML.");
+                return;
+            }
+
+            const matriculaValor = inputMatricula.value.trim();
+            const isEletrico = switchVe ? switchVe.checked : false;
 
             const novoVeiculo = {
-                pais: document.getElementById("input-pais-matricula").value,
-                matricula: document.getElementById("input-matricula").value,
-                alcunha: document.getElementById("input-alcunha").value,
-                eEletrico: document.getElementById("switch-ve").checked
+                matricula: matriculaValor,
+                tipo_combustivel: isEletrico ? "eletrico" : "combustao"
             };
 
             try {
+                console.log("📡 A enviar dados para o backend...", novoVeiculo);
                 const resposta = await fetch(`${API_BASE_URL}/veiculos`, {
                     method: "POST",
                     headers: obterHeaders(),
@@ -230,20 +261,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (resposta.ok) {
                     alert("Veículo adicionado com sucesso!");
                     
+                    // Fechar o popup de forma limpa
                     const overlayAdd = document.getElementById("overlay-add-veiculo");
                     if (overlayAdd) overlayAdd.style.display = "none";
                     
-                    formAddVeiculo.reset(); 
+                    // Limpar formulário
+                    formAddVeiculo.reset();
                     
-                    // Atualiza a lista na interface imediatamente
-                    carregarVeiculosGaragem();
+                    // Atualizar componentes ativos no ecrã automaticamente
+                    await carregarVeiculosGaragem();
+                    if (document.getElementById('reserva-veiculo')) {
+                        await carregarVeiculosParaReserva();
+                    }
                 } else {
-                    const erro = await resposta.json();
-                    alert("Erro ao adicionar: " + (erro.message || "Tenta novamente"));
+                    const erroDetalhado = await resposta.json().catch(() => ({}));
+                    alert("Erro do Servidor: " + (erroDetalhado.message || "Verifica os dados inseridos."));
                 }
             } catch (err) {
-                console.error("Erro na rede:", err);
-                alert("Erro de ligação ao servidor.");
+                console.error("Erro no Fetch:", err);
+                alert("Não foi possível ligar ao servidor. Garante que a API está a correr!");
             }
         });
     }
@@ -252,7 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================
 // 🌟 FUNÇÕES AUXILIARES E DE INTERFACE
 // ==========================================
-
 async function inicializarApp() {
     try {
         const resposta = await fetch(`${API_BASE_URL}/utilizadores/me`, {
@@ -287,7 +322,7 @@ function injetarMenu() {
             <svg class="profile-icon" viewBox="0 0 24 24" fill="currentColor" style="width: 24px; height: 24px;">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
             </svg>
-            <span class="profile-name" id="user-nav-name">Maria</span>
+            <span class="profile-name" id="user-nav-name">Carregando...</span>
             <div class="profile-dropdown" id="my-profile-dropdown">
                 <a href="#" id="abrir-modal-perfil" onclick="ativarAbaLateral('perfil'); event.preventDefault();">📝 Editar Perfil</a>
                 <hr>
@@ -295,6 +330,17 @@ function injetarMenu() {
             </div>
         </div>
     `;
+
+    // Acoplar dinamicamente a escuta do logout injetado
+    const logoutBtn = container.querySelector("#btn-logout");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            localStorage.removeItem("token");
+            alert("Sessão terminada!");
+            window.location.href = "login.html";
+        });
+    }
 }
 
 function setupEventosInterface() {
@@ -313,7 +359,6 @@ function setupEventosInterface() {
             iconeOlho.textContent = inputPassword.type === 'password' ? '👁️' : '🙈';
         }
         
-        // Escuta os cliques no menu lateral do modal de perfil
         const botaoAba = e.target.closest("#menu-perfil .btn-menu");
         if (botaoAba) {
             const botoesMenu = document.querySelectorAll("#menu-perfil .btn-menu");
@@ -331,7 +376,6 @@ function setupEventosInterface() {
         });
     }
 
-    // Fechar dropdown ao clicar fora
     document.addEventListener("click", (e) => {
         if (!e.target.closest("#profile-menu-trigger")) {
             const dropdown = document.getElementById("my-profile-dropdown");
@@ -369,7 +413,7 @@ async function guardarPerfil() {
         });
 
         if (resposta.ok) {
-            alert('Perfil updated com sucesso!');
+            alert('Perfil atualizado com sucesso!');
             const elNomes = ["user-nav-name", ".profile-name", "user-display-name"];
             elNomes.forEach(id => {
                 const el = document.querySelector(id.startsWith('.') ? id : `#${id}`);
@@ -460,7 +504,6 @@ function mudarConteudoAba(aba) {
                 if (overlayAdd) overlayAdd.style.display = "flex";
             });
         }
-        // Disparar o carregamento assíncrono dos dados da API
         carregarVeiculosGaragem();
     } else {
         zonaConteudo.innerHTML = `
