@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartVaga - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../CSS/login.css">
 </head>
 <body>
 
@@ -17,10 +17,10 @@
         <section class="auth-card">
             <h1 class="auth-title">Bem-vindo!</h1>
             
-            <form class="auth-form" action="vagas.html" method="POST">
+            <form class="auth-form" id="formLogin">
                 <div class="input-group">
-                    <label for="login-nome">Nome</label>
-                    <input type="text" id="login-nome" placeholder="Nome" required>
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="Introduz o teu email" required>
                 </div>
 
                 <div class="input-group">
@@ -36,6 +36,8 @@
                         Login
                     </button>
                 </div>
+                
+                <p>Ainda não tens conta? <a href="registar.html">Regista-te aqui</a></p>
 
                 <div class="form-footer">
                     <a href="esquecer-password.html" class="auth-link">Esqueceu da password?</a>
@@ -44,5 +46,6 @@
         </section>
     </main>
 
+    <script src="../JS/script.js"></script>
 </body>
 </html>

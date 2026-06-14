@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartVaga - Tarifários</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/carregamentos.css">
+    <link rel="stylesheet" href="../CSS/menu.css">
+</head>
+<body>
+
+    <nav>
+        <div id="menu-container" style="width: 100%;"></div>
+    </nav>
+
+    <main class="pricing-container">
+        <header class="pricing-header">
+            <h1>Custos de Estacionamento</h1>
+            <p>You need a solution that keeps up. That's why we developed Area. A developer-friendly approach to streamline your business.</p>
+            
+            <a href="reservas.html" style="text-decoration: none; display: inline-block;">
+                <button class="btn-reserva-pills">Reservar Agora</button>
+            </a>
+        </header>
+
+        <section class="pricing-grid">
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h2>Normal</h2>
+                </div>
+                <ul class="features-list">
+                    <li>Tarifa normal - 1.20€</li>
+                    <li>Tarifa Diária max - 12.00€</li>
+                    <li>Vaga padrão</li>
+                    <li>Sem carregamento</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h2>Carregamento Elétrico</h2>
+                </div>
+                <ul class="features-list">
+                    <li>Tarifa normal - 0.80€</li>
+                    <li>Custo por kWh - 0.25€</li>
+                    <li>Vaga com carregamento rápido</li>
+                    <li>Acesso prioritário</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+<div class="modal-overlay" id="overlay-modal-perfil" style="display: none;">
+        <div class="modal-container">
+            <button type="button" class="btn-fechar" id="btn-fechar-modal">&times;</button>
+            <div class="perfil-topo">
+                <div class="avatar-icone">
+                    <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <h2 id="user-display-name">Nome</h2>
+            </div>
+
+            <div class="modal-corpo">
+                <nav class="menu-lateral" id="menu-perfil">
+                    <button type="button" class="btn-menu active" data-aba="perfil">
+                        <span class="icone-menu">📝</span> Editar Perfil
+                    </button>
+                    <button type="button" class="btn-menu" data-aba="atividade">
+                        <span class="icone-menu">🕒</span> Atividade
+                    </button>
+
+                    <button type="button" class="btn-menu" data-aba="garagem">
+                        <span class="icone-menu">🚗</span> Garagem
+                    </button>
+
+                    <button type="button" class="btn-menu" data-aba="pagamento">
+                        <span class="icone-menu">💳</span> Pagamento
+                    </button>
+                </nav>
+
+                <div class="conteudo-central" id="zona-conteudo">
+                    <div class="aba-titulo">
+                        <h3>📝 Editar Perfil</h3>
+                    </div>
+
+                    <form class="form-perfil" id="form-editar-perfil">
+                        <div class="form-linha">
+                            <div class="form-grupo">
+                                <label for="input-nome">Nome</label>
+                                <input type="text" id="input-nome" placeholder="O teu nome">
+                            </div>
+
+                            <div class="form-grupo">
+                                <label for="input-email">Email</label>
+                                <input type="email" id="input-email" placeholder="O teu email">
+                            </div>
+                        </div>
+
+                        <div class="form-linha">
+                            <div class="form-grupo m-metade">
+                                <label for="input-password">Password</label>
+                                <input type="password" id="input-password" placeholder="••••••••">
+                            </div>
+                        </div>
+
+                        <div class="form-acoes">
+                            <button type="submit" class="btn-acao btn-editar" id="btn-guardar-perfil">
+                                <span class="icone-botao">📝</span> Editar
+                            </button>
+
+                            <button type="button" class="btn-acao btn-eliminar" id="btn-eliminar-conta">
+                                <span class="icone-botao">🗑️</span> Eliminar conta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="popup-overlay" id="overlay-add-veiculo" style="display: none;">
+        <div class="popup-container">
+            <button type="button" class="popup-fechar" id="btn-fechar-popup">&times;</button>
+            <div class="popup-topo">
+                <span class="popup-icone">🚗</span>
+                <h3>Veículo</h3>
+            </div>
+
+            <form id="form-add-veiculo">
+                <div class="popup-linha-matricula">
+                    <div class="seletor-pais">
+                        <select id="input-pais-matricula">
+                            <option value="PT">PT</option>
+                            <option value="ES">ES</option>
+                            <option value="FR">FR</option>
+                        </select>
+
+                        <span class="seta-seletor">v</span>
+                    </div>
+
+                    <input type="text" id="input-matricula" placeholder="Matrícula da viatura" required>
+                </div>
+
+                <div class="popup-grupo">
+                    <input type="text" id="input-alcunha" placeholder="Alcunha (opcional)">
+                </div>
+
+                <div class="cartao-ve">
+                    <div class="cartao-ve-info">
+                        <span class="icone-tomada">🔌</span>
+                        <label for="switch-ve">Este é um veículo elétrico (VE)</label>
+                    </div>
+
+                    <label class="switch-container">
+                        <input type="checkbox" id="switch-ve">
+                        <span class="switch-slider"></span>
+                    </label>
+
+                </div>
+
+                <div class="popup-acoes">
+                    <button type="submit" class="btn-submeter-veiculo">
+                        + Adicionar Veículo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../JS/script.js"></script>
+
+</body>
+</html>

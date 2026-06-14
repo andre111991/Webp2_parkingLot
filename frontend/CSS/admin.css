@@ -1,0 +1,162 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  display: flex;
+  background-color: #ffffff; /* Fundo limpo como o do teu site */
+  height: 100vh;
+  color: #333333;
+}
+
+/* Sidebar - Adaptada para o estilo minimalista */
+.sidebar {
+  width: 260px;
+  background-color: #f5f6f0; /* Um cinza/creme muito suave */
+  border-right: 1px solid #e2e4dc;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 20px;
+}
+
+.logo h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
+}
+
+/* Navegação do Menu */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  color: #555555;
+  padding: 14px 20px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 16px; /* Cantos arredondados como os teus filtros */
+  transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+  background-color: #e2e4dc;
+  color: #000;
+}
+
+/* Botão Ativo - Usa o Verde Tropa do teu botão principal */
+.menu-btn.active {
+  background-color: #425c1d;
+  color: white;
+}
+
+.menu-btn.logout {
+  margin-top: auto;
+  color: #ced4da;
+  background-color: #8b0000; /* Vermelho escuro discreto para o sair */
+  color: white;
+  text-align: center;
+}
+
+.menu-btn.logout:hover {
+  background-color: #a30000;
+}
+
+/* Conteúdo Principal */
+.conteudo-principal {
+  flex: 1;
+  padding: 50px;
+  overflow-y: auto;
+}
+
+.painel-conteudo h2 {
+  font-size: 26px;
+  margin-bottom: 30px;
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.header-seccao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Tabelas estilo "Card" Arredondado */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #e2e4dc; /* Cor idêntica aos grandes cards de contagem do teu site */
+  border-radius: 24px; /* Cantos super arredondados iguais aos teus cards */
+  overflow: hidden;
+}
+
+th, td {
+  padding: 18px 24px;
+  text-align: left;
+}
+
+th {
+  background-color: #dcdec9; /* Um tom ligeiramente mais escuro para o topo */
+  color: #444444;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+td {
+  color: #2b2b2b;
+  font-size: 15px;
+  border-bottom: 1px solid #d4d6cd;
+}
+
+tr:last-child td {
+  border-bottom: none; /* Remove a linha no último elemento para não estragar o arredondado */
+}
+
+/* Botões de Ação dentro do Painel */
+button.btn-criar {
+  background-color: #425c1d; /* Verde igual ao botão "Pretende reservar?" */
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 24px; /* Super arredondado */
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+button.btn-criar:hover {
+  background-color: #324614;
+}
+
+button.btn-delete {
+  background-color: #ffffff;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+button.btn-delete:hover {
+  background-color: #ef4444;
+  color: white;
+}

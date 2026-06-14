@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartVaga - Registar Conta</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="registar.css">
+    <link rel="stylesheet" href="../CSS/registar.css">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
         <section class="auth-card">
             <h1 class="auth-title">Registar conta</h1>
             
-            <form class="auth-form" action="index.html" method="POST">
+            <form class="auth-form" id="formRegisto">
                 <div class="input-group">
                     <label for="reg-nome">Nome</label>
                     <input type="text" id="reg-nome" placeholder="Nome" required>
@@ -36,9 +36,11 @@
                 <div class="button-container">
                     <button type="submit" class="btn-registar">Registar</button>
                 </div>
+                <p>Já tens uma conta? <a href="login.html">Inicia sessão aqui</a></p>
             </form>
         </section>
     </main>
 
+<script src="../JS/script.js"></script>
 </body>
 </html>

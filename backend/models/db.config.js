@@ -124,7 +124,7 @@ try {
 
         await Vaga.bulkCreate(novasVagas);
 
-        console.log("50 vagas criadas com sucesso (25 combustao, 25 eletrico)!");
+        console.log("50 vagas criadas com sucesso (25 combustão, 25 elétrico)!");
     }
 
 } catch (error) {
