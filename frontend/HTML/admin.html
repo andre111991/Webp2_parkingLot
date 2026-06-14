@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel de Administração</title>
+  <link rel="stylesheet" href="../CSS/admin.css">
+</head>
+<body>
+
+  <!-- Menu Lateral -->
+  <aside class="sidebar">
+    <div class="logo">
+      <h3>Admin Panel</h3>
+    </div>
+    <nav class="menu">
+      <button class="menu-btn active" onclick="mudarPainel('users')">👥 Utilizadores</button>
+      <button class="menu-btn" onclick="mudarPainel('vagas')">🅿️ Vagas</button>
+      <button class="menu-btn" onclick="mudarPainel('veiculos')">🚗 Veículos</button>
+      <button class="menu-btn logout" onclick="fazerLogout()">🚪 Sair</button>
+    </nav>
+  </aside>
+
+  <!-- Conteúdo Principal -->
+  <main class="conteudo-principal">
+    
+    <!-- SECCÃO: UTILIZADORES -->
+    <section id="painel-users" class="painel-conteudo">
+      <h2>Gestão de Utilizadores</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-users">
+          <!-- Inserido dinamicamente por JS -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECCÃO: VAGAS -->
+    <section id="painel-vagas" class="painel-conteudo" style="display: none;">
+      <div class="header-seccao">
+        <h2>Gestão de Vagas</h2>
+        <button class="btn-criar" onclick="abrirModalVaga()">+ Criar Vaga</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Número/Nome</th>
+            <th>Estado</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-vagas">
+          <!-- Inserido dinamicamente por JS -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECCÃO: VEÍCULOS -->
+    <section id="painel-veiculos" class="painel-conteudo" style="display: none;">
+      <h2>Todos os Veículos do Sistema</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Marca/Modelo</th>
+            <th>Matrícula</th>
+            <th>Dono (ID)</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-veiculos">
+          <!-- Inserido dinamicamente por JS -->
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <script src="../JS/admin.js"></script>
+</body>
+</html>

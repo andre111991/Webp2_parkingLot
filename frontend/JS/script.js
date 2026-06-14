@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- 2. FORMULÁRIO DE LOGIN ---
+   // --- 2. FORMULÁRIO DE LOGIN ---
     const formLogin = document.getElementById('formLogin');
     if (formLogin) {
         formLogin.addEventListener('submit', async (e) => {
@@ -163,11 +164,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!res.ok) throw new Error("Credenciais inválidas");
                 
                 const data = await res.json();
+                
+                // 1. Guarda o Token e o Email que veio da Base de Dados
                 if (data.token) localStorage.setItem("token", data.token);
                 
+                // IMPORTANTE: Ajustar caso o teu backend devolva 'data.email' ou 'data.user.email'
+                const emailUtilizador = data.email || dadosLogin.email; 
+                localStorage.setItem("userEmail", emailUtilizador.toLowerCase());
+                
                 alert("Login efetuado com sucesso!");
-                window.location.href = "vagas.html"; 
+                
+                // 2. O DESVIO INTELIGENTE: Verifica se é o admin
+                const EMAIL_ADMIN_CORRETO = "admin1@admin.com"; 
+                
+                if (emailUtilizador.toLowerCase() === EMAIL_ADMIN_CORRETO.toLowerCase()) {
+                    window.location.href = "admin.html"; // Admin vai para o painel de controlo
+                } else {
+                    window.location.href = "index.html"; // Clientes normais vão para o site
+                }
+
             } catch (err) {
+                console.error(err);
                 alert("Erro no login: Verifica os teus dados.");
             }
         });
@@ -175,15 +192,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 3. PROTEÇÃO DE ROTAS E INICIALIZAÇÃO ---
     const paginaAtual = window.location.pathname;
-    if (!paginaAtual.includes("login.html") && !paginaAtual.includes("registar.html")) {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            window.location.href = "login.html";
-            return;
-        }
-        inicializarApp();
-        setupEventosInterface();
+   // Procura esta linha no teu script.js e adiciona o "admin.html"
+if (!paginaAtual.includes("login.html") && !paginaAtual.includes("registar.html") && !paginaAtual.includes("admin.html")) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        window.location.href = "login.html";
+        return;
     }
+    inicializarApp();
+    setupEventosInterface();
+}
 
     // --- 4. LÓGICA DA PÁGINA DE RESERVAS ---
     const selectVeiculo = document.getElementById('reserva-veiculo');
