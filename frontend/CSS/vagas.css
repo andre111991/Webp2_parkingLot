@@ -23,7 +23,7 @@
 }
 
 /* Seleção de Piso (Estilo Cápsula) */
-.piso-selector-container {
+.pisos-toggle {
     display: flex;
     background-color: #f2f2f2;
     padding: 6px;
@@ -31,7 +31,7 @@
     border: 1px solid #e0e0e0;
 }
 
-.piso-btn {
+.btn-piso {
     border: none;
     background: transparent;
     padding: 12px 35px;
@@ -44,13 +44,13 @@
     color: #666;
 }
 
-.piso-btn.active {
+.btn-piso.active {
     background-color: #ffffff;
     color: #1a1a1a;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.piso-btn:hover:not(.active) {
+.btn-piso:hover:not(.active) {
     color: #000;
 }
 
@@ -258,3 +258,4 @@
 .profile-dropdown.active {
     display: block;
 }
+

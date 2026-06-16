@@ -29,45 +29,39 @@
 </div>
     </nav>
     <main class="vagas-main">
-        <div class="vagas-filters">
-            <div class="piso-selector-container">
-                <button class="piso-btn">Piso 0</button>
-                <button class="piso-btn active">Piso -1</button>
-                <button class="piso-btn">Piso -2</button>
-            </div>
+   <div class="filtros-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 30px;">
+    
+    <div class="pisos-toggle" style="display: flex; gap: 10px;">
+        <button type="button" class="btn-piso" data-piso="0" style="display: none;">Piso 0</button>
+        
+        <button type="button" class="btn-piso active" data-piso="-1">Piso -1</button>
+        
+        <button type="button" class="btn-piso" data-piso="-2" style="display: none;">Piso -2</button>
+    </div>
+
+    <div class="filtros-vagas-limpo"></div>
+
+</div>
 
         
-            <div class="checkbox-group-horizontal">
-                <label class="custom-check">
-                    <input type="checkbox"> Normal
-                </label>
-
-                <label class="custom-check">
-                    <input type="checkbox"> Elétrico
-                </label>
-
-                <label class="custom-check">
-                    <input type="checkbox"> Mostrar apenas vagas livres
-                </label>
-            </div>
-        </div>
+          
 
         <div class="cards-grid">
-            <div class="stat-card">
-                <div class="number">0</div>
-                <p>Vagas livres</p>
-            </div>
+    <div class="stat-card">
+        <div class="number"><span id="total-vagas-livres">0</span></div>
+        <p>Vagas de combustão livres</p>
+    </div>
 
-            <div class="stat-card">
-                <div class="number">0</div>
-                <p>Vagas de carregamento livres</p>
-            </div>
+    <div class="stat-card">
+        <div class="number"><span id="total-vagas-eletricas">0</span></div>
+        <p>Vagas de carregamento livres</p>
+    </div>
 
-            <div class="stat-card">
-                <div class="number">0</div>
-                <p>Vagas reservadas</p>
-            </div>
-        </div>
+    <div class="stat-card">
+        <div class="number"><span id="total-vagas-reservadas">0</span></div>
+        <p>Vagas reservadas</p>
+    </div>
+</div>
 
         <div class="reserva-footer">
             <a href="reservas.html" style="text-decoration: none; width: 100%; display: flex; justify-content: center;">
