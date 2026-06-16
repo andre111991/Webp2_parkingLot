@@ -34,12 +34,19 @@ async function carregarVeiculosGaragem() {
             let htmlGeral = `<div style="display: flex; flex-direction: column; gap: 10px; max-height: 240px; overflow-y: auto;">`;
             veiculos.forEach(v => {
                 const badgeCombustivel = v.tipo_combustivel === "eletrico" ? "⚡ Elétrico" : "⛽ Combustão";
+                
                 htmlGeral += `
                     <div class="item-veiculo" style="padding: 12px; background-color: #f4f6f2; border-left: 4px solid #5b6b47; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
                             <strong style="color: #222; font-size: 15px; letter-spacing: 1px;">${v.matricula.toUpperCase()}</strong>
+                            <span style="font-size: 11px; align-self: flex-start; background: #e2e8f0; padding: 2px 8px; border-radius: 12px; color: #444; font-weight: 500;">${badgeCombustivel}</span>
                         </div>
-                        <span style="font-size: 12px; background: #e2e8f0; padding: 4px 8px; border-radius: 12px; color: #444; font-weight: 500;">${badgeCombustivel}</span>
+                        
+                        <button class="btn-delete-veiculo" 
+                                style="border: 1px solid #bd4b4b; color: #bd4b4b; background: white; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s;"
+                                onclick="eliminarVeiculo(${v.id_veiculo})">
+                            Apagar
+                        </button>
                     </div>
                 `;
             });
@@ -51,6 +58,44 @@ async function carregarVeiculosGaragem() {
     } catch (err) {
         console.error("Erro na Garagem:", err);
         lista.innerHTML = `<p class="texto-vazio" style="color: red;">Erro de ligação ao servidor.</p>`;
+    }
+}
+
+async function eliminarVeiculo(idVeiculo) {
+    if (!idVeiculo) {
+        alert("Erro: ID do veículo inválido.");
+        return;
+    }
+
+    if (!confirm("Tens a certeza que desejas remover este veículo da tua garagem?")) {
+        return;
+    }
+
+    try {
+        console.log(`📡 A enviar pedido DELETE para apagar o veículo ID: ${idVeiculo}...`);
+        
+        // Faz o pedido DELETE para a rota base de veículos passando o ID
+        const resposta = await fetch(`${API_BASE_URL}/veiculos/${idVeiculo}`, {
+            method: "DELETE",
+            headers: obterHeaders() // Já inclui o teu Token de Autorização
+        });
+
+        if (resposta.ok) {
+            alert("Veículo removido com sucesso!");
+            
+            // 🔄 Atualiza a garagem e os seletores no ecrã automaticamente!
+            await carregarVeiculosGaragem();
+            
+            if (document.getElementById('reserva-veiculo') && typeof carregarVeiculosParaReserva === "function") {
+                await carregarVeiculosParaReserva();
+            }
+        } else {
+            const erroDetalhado = await resposta.json().catch(() => ({}));
+            alert("Erro do Servidor: " + (erroDetalhado.message || "Não foi possível remover o veículo."));
+        }
+    } catch (err) {
+        console.error("❌ Erro ao apagar veículo:", err);
+        alert("Falha de comunicação com o servidor.");
     }
 }
 
@@ -81,10 +126,10 @@ async function carregarVeiculosParaReserva() {
                     const matriculaFormatada = v.matricula.toUpperCase();
                     const tipoCombustivel = v.tipo_combustivel === "eletrico" ? "⚡ Elétrico" : "⛽ Combustão";
                     
-                    const option = document.createElement("option");
-                    option.value = v.matricula;
-                    option.textContent = `${matriculaFormatada} (${tipoCombustivel})`;
-                    selectElement.appendChild(option);
+                    const option = document.createElement('option');
+option.value = v.id_veiculo; // 🔥 CRUCIAL: O value guarda o ID numérico!
+option.textContent = `${v.matricula} (🚗 ${v.tipo_combustivel})`; // O que o utilizador lê
+selectElement.appendChild(option);
                 }
             });
             console.log("✅ Dropdown de veículos de reserva preenchido!");
@@ -210,40 +255,80 @@ if (!paginaAtual.includes("login.html") && !paginaAtual.includes("registar.html"
     }
 
     // FIX: Variável capturada corretamente para evitar quebras de execução no JS!
+   // --- 4. LÓGICA DA PÁGINA DE RESERVAS ---
+    // --- 4. LÓGICA DA PÁGINA DE RESERVAS ---
+  // --- 4. LÓGICA DA PÁGINA DE RESERVAS ---
+    // --- 4. LÓGICA DA PÁGINA DE RESERVAS ---
     const btnEfetuarReserva = document.querySelector('.btn-efetuar-reserva');
     if (btnEfetuarReserva) {
-        btnEfetuarReserva.addEventListener('click', () => {
-            const veiculoEscolhido = document.getElementById('reserva-veiculo').value;
+        btnEfetuarReserva.addEventListener('click', async () => {
+            // 1. Captura os valores diretamente do ecrã
+            const idVeiculoEscolhido = document.getElementById('reserva-veiculo').value; // Agora traz o ID diretamente!
             const dataInicio = document.getElementById('reserva-data-inicio').value;
             const dataFim = document.getElementById('reserva-data-fim').value;
             const tipoVagaEscolhido = document.getElementById('reserva-tipo-vaga').value;
 
-            if (!veiculoEscolhido || !dataInicio || !dataFim || !tipoVagaEscolhido) {
-                alert("Por favor, preenche todos os campos (veículo, datas e tipo de vaga) antes de efetuar a reserva!");
+            if (!idVeiculoEscolhido || !dataInicio || !dataFim || !tipoVagaEscolhido) {
+                alert("Por favor, preenche todos os campos antes de efetuar a reserva!");
                 return;
             }
 
-            const dInicio = new Date(dataInicio);
-            const dFim = new Date(dataFim);
-            const formatarData = (d) => `${d.toLocaleDateString('pt-PT')} às ${d.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
+            try {
+                // 2. Mapeamento do tipo de vaga para a Base de Dados
+                let tipoVagaBD = "combustao"; 
+                if (tipoVagaEscolhido.toLowerCase().includes("elét") || tipoVagaEscolhido.toLowerCase() === "eletrico") {
+                    tipoVagaBD = "eletrico";
+                }
 
-            const agora = new Date();
-            const dataRegisto = `${agora.toLocaleDateString('pt-PT')} às ${agora.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
+                console.log(`🔍 A procurar uma vaga livre do tipo: [${tipoVagaBD}]`);
+                
+                // 3. Procurar uma vaga livre correspondente na API
+                const resVagas = await fetch(`${API_BASE_URL}/vagas`, { headers: obterHeaders() });
+                if (!resVagas.ok) throw new Error("Não foi possível consultar as vagas.");
+                
+                const listaVagas = await resVagas.json();
+                const vagaLivreCorrespondente = listaVagas.find(v => 
+                    Number(v.estado) === 0 && 
+                    v.tipo.toLowerCase() === tipoVagaBD
+                );
 
-            const novaAtividade = {
-                texto: `Reservou vaga ${tipoVagaEscolhido} para o veículo [${veiculoEscolhido}]. Período: de ${formatarData(dInicio)} até ${formatarData(dFim)}.`,
-                data: dataRegisto
-            };
+                if (!vagaLivreCorrespondente) {
+                    alert(`Infelizmente, já não existem vagas livres do tipo [${tipoVagaEscolhido}] no parque!`);
+                    return;
+                }
 
-            let historico = JSON.parse(localStorage.getItem('historico_atividades')) || [];
-            historico.unshift(novaAtividade);
-            localStorage.setItem('historico_atividades', JSON.stringify(historico));
+                // 4. Construir o objeto perfeito para o teu middleware validarReservaInput
+                const dadosReserva = {
+                    id_veiculo: parseInt(idVeiculoEscolhido), // Número puro e limpo!
+                    id_vaga: parseInt(vagaLivreCorrespondente.id_vaga),
+                    data_hora_inicio: dataInicio,
+                    data_hora_fim: dataFim
+                };
 
-            alert("Reserva efetuada com sucesso!");
-            window.location.href = "vagas.html";
+                console.log("📡 A enviar dados para gravação real:", dadosReserva);
+
+                // 5. POST real para a rota das reservas
+                const respostaServidor = await fetch(`${API_BASE_URL}/reservas`, {
+                    method: "POST",
+                    headers: obterHeaders(),
+                    body: JSON.stringify(dadosReserva)
+                });
+
+                if (respostaServidor.ok) {
+                    alert("Reserva efetuada com sucesso!");
+                    window.location.href = "vagas.html"; // Redireciona e atualiza os contadores reais
+                } else {
+                    const erroResposta = await respostaServidor.json().catch(() => ({}));
+                    alert("Erro do Servidor: " + (erroResposta.message || "Verifica os dados introduzidos."));
+                }
+
+            } catch (err) {
+                console.error("❌ Erro crítico no processo de reserva:", err);
+                alert("Falha de comunicação com o servidor.");
+            }
         });
     }
-
+    
     // --- 5. SUBMISSAO DO FORMULÁRIO DE ADICIONAR VEÍCULO ---
     // Monitoriza o envio do formulário em vez do clique solto no botão para capturar o Enter também
     const formAddVeiculo = document.getElementById("form-add-veiculo");
@@ -552,3 +637,69 @@ window.alternarMenuDropdown = function(evento) {
     const dropdown = document.getElementById("my-profile-dropdown");
     if (dropdown) dropdown.classList.toggle("active");
 };
+
+async function atualizarContadoresDashboard() {
+    const token = localStorage.getItem("token");
+    
+    // Procura os cartões originais do teu HTML através da classe nativa
+    const cartoesNumeros = document.querySelectorAll(".stat-card .number");
+
+    // Segurança: Se não estiveres na página das vagas, sai silenciosamente sem quebrar o JS
+    if (!cartoesNumeros || cartoesNumeros.length < 3) return;
+
+    try {
+        // CORREÇÃO: Mudado de API_URL para API_BASE_URL para bater certo com o topo do teu ficheiro
+        const resposta = await fetch(`${API_BASE_URL}/vagas`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!resposta.ok) {
+            console.error("Erro ao carregar dados das vagas");
+            return;
+        }
+
+        const listaVagas = await resposta.json();
+
+        // Inicializar os contadores
+        let livresCombustao = 0;
+        let livresEletricas = 0;
+        let reservadas = 0;
+
+        // Fazer as contas com base no teu modelo Sequelize
+        listaVagas.forEach(vaga => {
+            const estadoVaga = parseInt(vaga.estado);
+
+            if (estadoVaga === 1) {
+                reservadas++;
+            } else if (estadoVaga === 0) {
+                if (vaga.tipo === 'eletrico') {
+                    livresEletricas++;
+                } else {
+                    livresCombustao++;
+                }
+            }
+        });
+
+        // Injetar os valores pelas posições exatas dos teux stat-cards originais
+        cartoesNumeros[0].innerText = livresCombustao;
+        cartoesNumeros[1].innerText = livresEletricas;
+        cartoesNumeros[2].innerText = reservadas;
+
+        console.log(`📊 Dashboard Atualizado: ${livresCombustao} Livres | ${livresEletricas} Elétricas | ${reservadas} Reservadas`);
+
+    } catch (erro) {
+        console.error("❌ Erro ao calcular estatísticas do parque:", erro);
+    }
+}
+
+// CORREÇÃO: Adicionar a chamada diretamente dentro do teu DOMContentLoaded principal lá de cima!
+// Mas para testares já, podes deixar esta escuta limpa no fundo:
+if (window.location.pathname.includes("vagas.html") || document.querySelector(".cards-grid")) {
+    document.addEventListener("DOMContentLoaded", () => {
+        atualizarContadoresDashboard();
+    });
+}
