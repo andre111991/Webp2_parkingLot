@@ -23,11 +23,13 @@ export const loginUser = async (req, res, next) => {
         const token = jwt.sign(
             { id: user.id_utilizador, tipo: user.tipo_utilizador },
             process.env.JWT_SECRET,
-            { expiresIn: '45m' } // O token expira em 15 minutos 
+            { expiresIn: '15m' } // O token expira em 15 minutos 
         );
 
         const refreshToken = jwt.sign(
-            { id: user.id_utilizador }, // O refresh não precisa de ter o 'tipo'
+            { id: user.id_utilizador,
+              tipo: user.tipo
+            }, // O refresh não precisa de ter o 'tipo'
             process.env.JWT_REFRESH_SECRET, 
             { expiresIn: '7d' } 
         );
@@ -56,36 +58,44 @@ export const loginUser = async (req, res, next) => {
 };
 
 export const refreshToken = async (req, res, next) => {
-    // 1. Ler o cookie que o navegador envia automaticamente
     const refreshToken = req.cookies.refreshToken;
 
-    // Se o cookie não existir (ex: sessão expirada ou limpa), bloqueamos logo
     if (!refreshToken) {
         return res.status(401).json({ message: "Refresh token em falta!" });
     }
 
     try {
-        // 2. Verificar se o token é legítimo
+        // 1. Verificar a legitimidade do token
         const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
-        // 3. Ir à base de dados buscar o utilizador para validar que ainda existe
+        // 2. Buscar o utilizador (incluindo o tipo para garantir que o dado é atual)
         const user = await User.findByPk(decoded.id);
+        
+        // Se o utilizador foi apagado ou bloqueado entretanto
         if (!user) {
-            return res.status(403).json({ message: "Utilizador inválido!" });
+            return res.status(403).json({ message: "Utilizador inexistente!" });
         }
 
-        // 4. Gerar um NOVO Access Token
+        // 3. Gerar novo Access Token com os dados mais recentes do utilizador
+        // Usamos 'user.tipo' (ou o nome da tua coluna correta)
         const newAccessToken = jwt.sign(
-            { id: user.id_utilizador, tipo: user.tipo_utilizador },
+            { 
+                id: user.id_utilizador, 
+                tipo: user.tipo_utilizador 
+            },
             process.env.JWT_SECRET,
             { expiresIn: '15m' }
         );
 
-        // 5. Responder com o novo token
         res.status(200).json({ token: newAccessToken });
 
     } catch (error) {
-        // Se o token for inválido ou tiver expirado, damos erro 403
+        // Log do erro no servidor para poderes depurar no VS Code
+        console.error("Erro no Refresh Token:", error.message);
+        
+        // Limpar o cookie se o token for inválido é uma boa prática de segurança
+        res.clearCookie('refreshToken');
+        
         return res.status(403).json({ message: "Refresh token inválido ou expirado!" });
     }
 };
